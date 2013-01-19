@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Canvas</title>
+</head>
+
+<body>
+	<script id="container-template" type="text/template">
+		<div id="<%= options.uuid %>" class="container">
+		</div>
+	</script>
+	<script id="row-template" type="text/template">
+		<div id="<%= options.uuid %>" class="row">
+		Hi
+		</div>
+	</script>
+	<script id="column-template" type="text/template">
+		<div id="<%= options.uuid %>" class="<%= options.colspan %> column">
+		</div>
+	</script>
+	<div id="page">
+	</div>	
+	<script src="uuid.core.js"></script>
+	<script src="backbone.marionette/jquery.js"></script>
+	<script src="backbone.marionette/underscore.js"></script>
+	<script src="backbone.marionette/backbone.js"></script>
+	<script src="backbone.marionette/backbone.marionette.js"></script>
+	<script src="app.js"></script>
+</body>
+</html>
