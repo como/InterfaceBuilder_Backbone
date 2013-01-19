@@ -5,21 +5,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Canvas</title>
+<style>
+.container {border: 1px solid #000; padding: 5px;}
+.row {border: 1px solid #000;; padding: 5px;}
+</style>
 </head>
 
 <body>
 	<script id="container-template" type="text/template">
-		<div id="<%= options.uuid %>" class="container">
-		</div>
+		Container Content
 	</script>
 	<script id="row-template" type="text/template">
-		<div id="<%= options.uuid %>" class="row">
-		Hi
-		</div>
+		Row Content
 	</script>
 	<script id="column-template" type="text/template">
-		<div id="<%= options.uuid %>" class="<%= options.colspan %> column">
-		</div>
+		Column Content
 	</script>
 	<div id="page">
 	</div>	

@@ -15,14 +15,15 @@ var Rows = Backbone.Collection.extend({model: Row});
 var Columns = Backbone.Collection.extend({model: Column});
 var Blocks = Backbone.Collection.extend({model: Block});
 
-
 var ContainerView = Backbone.View.extend({
 	initialize: function(){
 		this.template = '#container-template';
 	    _.bindAll(this, "render");
 	    this.model.bind('change', this.render);
+		this.render();
 	},
 	render: function(){
+		console.log(this);
 		this.$el.html(_.template($(this.template).html(), this.options));
 	}
 });
@@ -30,11 +31,12 @@ var ContainerView = Backbone.View.extend({
 var RowView = Backbone.View.extend({
 	initialize: function(){
 		this.template = '#row-template';
-	    _.bindAll(this, "render");
-	    this.model.bind('change', this.render);
+	    // _.bindAll(this, "render");
+	    // this.model.bind('change', this.render);
+		this.render();
 	},
 	render: function(){
-		console.log(this.$el);
+		console.log(this);
 		this.$el.html(_.template($(this.template).html(), this.options));
 	}
 });
@@ -45,73 +47,63 @@ var BlockView = Backbone.View.extend({});
 
 IB.PageController = function(page) {
 	that = this;
-	that.page = page;
-	that.views = {
-		containerViews: {},
-		rowViews: {},
-		columnViews: {},
-		blockViews: {}
-	};
+	that.page = page;	
+	that.views = {};
 	that.build = function(data){
-		var pageContainers = new Containers();
+		that.page.set('containers', new Containers());
+		
 		_.each(data.containers, function(container){
-			
-			var newContainer = new Container({template: container.template, uuid: container.uuid});						
-			
-			that.views.containerViews[container.uuid] = new ContainerView({model:newContainer, el:'#page', options:{uuid:container.uuid}});
-					
-			var containerRows = new Rows();
+			//that.page.get('containers').add(new Container({uuid: container.uuid}))
+			that.addContainer({uuid:container.uuid});
 			_.each(container.rows, function(row){
-				var newRow = new Row({template: row.template, uuid: row.uuid});
-				var rowColumns = new Columns();
-				_.each(row.columns, function(column){
-					var newColumn = new Column({template: column.template, uuid: column.uuid});
-					rowColumns.add(newColumn);
-				});
-				newRow.set('columns', rowColumns);
-				
-
-				that.views.rowViews[row.uuid] = new RowView({model:newRow, el:'#'+container.uuid, options:{uuid:row.uuid}});
-				
-				containerRows.add(newRow);
-			});
-			newContainer.set('rows', containerRows);
-			pageContainers.add(newContainer);			
+				that.addRow({containerUUID: container.uuid, uuid: row.uuid});
+			});		
 		});
-		that.page.set('containers', pageContainers);
+	}
+	that.addContainer = function(options){
+		var containerUUID = options.uuid || UUID.generate();
+		var newContainer = new Container({uuid: containerUUID});
+		newContainer.set('rows', new Rows());
+		that.page.get('containers').add(newContainer);
+		containerEl = $('<div id="'+containerUUID+'" class="container" />').appendTo('#page');
+		that.views[containerUUID] = new ContainerView({model:newContainer, el:containerEl, options:{uuid:containerUUID}});		
 	}
 	that.addRow = function(options){
 		
-		var rowColumns = new Columns();
+		// var rowColumns = new Columns();
+		// 
+		// _.each(options.columns, function(colspan){
+		// 	rowColumns.add(new Column({colspan: colspan}));
+		// });
 		
-		_.each(options.columns, function(colspan){
-			rowColumns.add(new Column({colspan: colspan}));
-		});
-		
-		var newRowUUID = UUID.generate();
-		var newRow = new Row({uuid: newRowUUID, columns: rowColumns});
-		//that.views.rowViews[newRowUUID] = new RowView({model:newRow, el:'#'+options.containeruuid, options:{uuid:newRowUUID}});
-		
+		var rowUUID = options.uuid || UUID.generate();
+		var newRow = new Row({uuid: rowUUID, columns: null});
+				
 		that.page.get('containers').find(function(container){
-			 return container.get('uuid') == options.containeruuid;
+			 return container.get('uuid') == options.containerUUID;
 		})
 		.get('rows')
 		.add(newRow);
 		
+		rowEl = $('<div id="'+rowUUID+'" class="row" />').appendTo('#'+options.containerUUID);
+		
+		that.views[rowUUID] = new RowView({model:newRow, el:rowEl, options:{uuid:rowUUID}});
 	}
 	
 	that.removeRow = function(options){
 		
 		containerRows = that.page.get('containers').find(function(container){
-			 return container.get('uuid') == options.containeruuid;
-		})
-		.get('rows');
+			 return container.get('uuid') == options.containerUUID;
+		}).get('rows');
 		
-		containerRows.remove(containerRows.find(function(row){
-				return row.get('uuid') == options.rowuuid;
-			}));
+		// containerRows.remove(containerRows.find(function(row){
+		// 		return row.get('uuid') == options.rowUUID;
+		// 	}));
 		
-		console.log("removed"+options.rowuuid);
+		console.log(options.rowUUID);
+		
+
+		that.views[options.containerUUID].render();
 	}
 	
 	that.addBlock = function(options){
@@ -119,11 +111,7 @@ IB.PageController = function(page) {
 	
 	that.render = function(){
 		_.each(that.page.get('containers').models, function(container){			
-			that.views.containerViews[container.get('uuid')].render();
-			_.each(container.get('rows').models, function(row){
-				console.log(row);
-				that.views.rowViews[row.get('uuid')].render();
-			});
+			
 		});
 		
 		return true;
@@ -141,21 +129,21 @@ $(document).ready(function(){
 	            	row1: {
 						uuid: 'row1',
 			            template: {},
-	        			order: {},
-				        columns: {
-					        column1: {
-								uuid: 'column1',
-						        template: {},
-							    blocks: {
-								    block1: {
-										uuid: 'block1',
-									    template: {},
-									    order: {},
-									    data: {}
-									}
-								}
-	    					}
-	    				}
+	        			order: {}// ,
+	        			// 				        columns: {
+	        			// 					        column1: {
+	        			// 								uuid: 'column1',
+	        			// 						        template: {},
+	        			// 							    blocks: {
+	        			// 								    block1: {
+	        			// 										uuid: 'block1',
+	        			// 									    template: {},
+	        			// 									    order: {},
+	        			// 									    data: {}
+	        			// 									}
+	        			// 								}
+	        			// 	    					}
+	    				//}
 	        		}
 	        	}
 	        }
@@ -164,9 +152,9 @@ $(document).ready(function(){
 
 PageController = new IB.PageController(new Page());
 PageController.build(data);
-PageController.addRow({
-	containeruuid: 'container1',
-	columns: ['span8','span4']
-	});
+// PageController.addRow({
+// 	containeruuid: 'container1',
+// 	columns: ['span8','span4']
+// 	});
 	
 });
