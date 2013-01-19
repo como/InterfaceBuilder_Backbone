@@ -25,19 +25,27 @@ var ContainerView = Backbone.View.extend({
 	render: function(){
 		console.log(this);
 		this.$el.html(_.template($(this.template).html(), this.options));
+	},
+	remove: function(){
+		this.$el.remove();
+		this.$el.unbind();
 	}
 });
 
 var RowView = Backbone.View.extend({
-	initialize: function(){
+	initialize: function(attrs){
 		this.template = '#row-template';
+		this.options = attrs;
 	    // _.bindAll(this, "render");
 	    // this.model.bind('change', this.render);
 		this.render();
 	},
 	render: function(){
-		console.log(this);
-		this.$el.html(_.template($(this.template).html(), this.options));
+		this.$el.html(_.template($(this.template).html(), {uuid: this.options.viewOptions.uuid, containerUUID: this.options.viewOptions.containerUUID}));
+	},
+	remove: function(){
+		this.$el.remove();
+		this.$el.unbind();
 	}
 });
 
@@ -50,10 +58,8 @@ IB.PageController = function(page) {
 	that.page = page;	
 	that.views = {};
 	that.build = function(data){
-		that.page.set('containers', new Containers());
-		
+		that.page.set('containers', new Containers());		
 		_.each(data.containers, function(container){
-			//that.page.get('containers').add(new Container({uuid: container.uuid}))
 			that.addContainer({uuid:container.uuid});
 			_.each(container.rows, function(row){
 				that.addRow({containerUUID: container.uuid, uuid: row.uuid});
@@ -87,23 +93,21 @@ IB.PageController = function(page) {
 		
 		rowEl = $('<div id="'+rowUUID+'" class="row" />').appendTo('#'+options.containerUUID);
 		
-		that.views[rowUUID] = new RowView({model:newRow, el:rowEl, options:{uuid:rowUUID}});
+		that.views[rowUUID] = new RowView({model:newRow, el:rowEl, viewOptions:{uuid:rowUUID, containerUUID:options.containerUUID}});
 	}
 	
 	that.removeRow = function(options){
-		
+		console.log(options);
 		containerRows = that.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		}).get('rows');
 		
-		// containerRows.remove(containerRows.find(function(row){
-		// 		return row.get('uuid') == options.rowUUID;
-		// 	}));
+		containerRows.remove(containerRows.find(function(row){
+				return row.get('uuid') == options.uuid;
+			}));
 		
-		console.log(options.rowUUID);
+		that.views[options.uuid].remove();
 		
-
-		that.views[options.containerUUID].render();
 	}
 	
 	that.addBlock = function(options){
