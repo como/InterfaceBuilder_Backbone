@@ -38,10 +38,15 @@ var RowView = Backbone.View.extend({
 		this.options = attrs;
 	    // _.bindAll(this, "render");
 	    // this.model.bind('change', this.render);
-		this.render();
+		this.render();		
 	},
 	render: function(){
-		this.$el.html(_.template($(this.template).html(), {uuid: this.options.viewOptions.uuid, containerUUID: this.options.viewOptions.containerUUID}));
+		this.$el.html(_.template($(this.template).html(), {
+			uuid: this.options.viewOptions.uuid, 
+			containerUUID: this.options.viewOptions.containerUUID,
+			columns: _.toArray(this.model.get('columns'))
+			})
+		);
 	},
 	remove: function(){
 		this.$el.remove();
@@ -49,7 +54,17 @@ var RowView = Backbone.View.extend({
 	}
 });
 
-var ColumnView = Backbone.View.extend({});
+var ColumnView = Backbone.View.extend({
+	initialize: function(){
+		this.template = '#column-template';
+		this.render();	
+	},
+	render: function(){
+		console.log('Rendering');
+		this.$el.html(_.template($(this.template).html(), {}));
+	}
+});
+
 var BlockView = Backbone.View.extend({});
 
 
@@ -63,6 +78,9 @@ IB.PageController = function(page) {
 			that.addContainer({uuid:container.uuid});
 			_.each(container.rows, function(row){
 				that.addRow({containerUUID: container.uuid, uuid: row.uuid});
+				_.each(row.columns, function(column){
+					that.addColumn({containerUUID: container.uuid, rowUUID: row.uuid, uuid: column.uuid, colspan: column.colspan});
+				});
 			});		
 		});
 	}
@@ -76,15 +94,9 @@ IB.PageController = function(page) {
 	}
 	that.addRow = function(options){
 		
-		// var rowColumns = new Columns();
-		// 
-		// _.each(options.columns, function(colspan){
-		// 	rowColumns.add(new Column({colspan: colspan}));
-		// });
-		
 		var rowUUID = options.uuid || UUID.generate();
-		var newRow = new Row({uuid: rowUUID, columns: null});
-				
+		var newRow = new Row({uuid: rowUUID, columns: options.columns});
+		newRow.set('columns', new Columns());
 		that.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		})
@@ -95,7 +107,6 @@ IB.PageController = function(page) {
 		
 		that.views[rowUUID] = new RowView({model:newRow, el:rowEl, viewOptions:{uuid:rowUUID, containerUUID:options.containerUUID}});
 	}
-	
 	that.removeRow = function(options){
 		console.log(options);
 		containerRows = that.page.get('containers').find(function(container){
@@ -108,6 +119,24 @@ IB.PageController = function(page) {
 		
 		that.views[options.uuid].remove();
 		
+	}
+	that.addColumn = function(options){
+		
+		var columnUUID = options.uuid || UUID.generate();
+		var newColumn = new Column({uuid: columnUUID, colspan: options.colspan, blocks: null});
+				
+		that.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
+		})
+		.get('rows')
+		.find(function(row){
+			return row.get('uuid') == options.rowUUID;
+		})
+		.get('columns')
+		.add(newColumn);
+
+		colEl = $('<div id="'+columnUUID+'" class="column '+options.colspan+'" />').appendTo('#'+options.rowUUID);		
+		that.views[columnUUID] = new ColumnView({model:newColumn, el:colEl});
 	}
 	
 	that.addBlock = function(options){
@@ -133,21 +162,33 @@ $(document).ready(function(){
 	            	row1: {
 						uuid: 'row1',
 			            template: {},
-	        			order: {}// ,
-	        			// 				        columns: {
-	        			// 					        column1: {
-	        			// 								uuid: 'column1',
-	        			// 						        template: {},
-	        			// 							    blocks: {
-	        			// 								    block1: {
-	        			// 										uuid: 'block1',
-	        			// 									    template: {},
-	        			// 									    order: {},
-	        			// 									    data: {}
-	        			// 									}
-	        			// 								}
-	        			// 	    					}
-	    				//}
+	        			order: {},
+				        columns: {
+					        column1: {
+								uuid: 'column1',
+						        colspan: 'span6',
+							    blocks: {
+								    block1: {
+										uuid: 'block1',
+									    template: {},
+									    order: {},
+									    data: {}
+									}
+								}
+	    					},
+					        column2: {
+								uuid: 'column2',
+						        colspan: 'span6',
+							    blocks: {
+								    block2: {
+										uuid: 'block2',
+									    template: {},
+									    order: {},
+									    data: {}
+									}
+								}
+	    					}
+	    				}
 	        		}
 	        	}
 	        }
