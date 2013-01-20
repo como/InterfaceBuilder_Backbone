@@ -23,7 +23,6 @@ var ContainerView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
-		console.log(this);
 		this.$el.html(_.template($(this.template).html(), this.options));
 	},
 	remove: function(){
@@ -59,8 +58,13 @@ var ColumnView = Backbone.View.extend({
 		this.template = '#column-template';
 		this.render();	
 	},
+	events: {
+		'dblclick': 'addOne',
+	},
+	addOne: function(){
+		PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
+	},
 	render: function(){
-		console.log('Rendering');
 		this.$el.html(_.template($(this.template).html(), {}));
 	}
 });
@@ -89,7 +93,7 @@ IB.PageController = function(page) {
 		var newContainer = new Container({uuid: containerUUID});
 		newContainer.set('rows', new Rows());
 		that.page.get('containers').add(newContainer);
-		containerEl = $('<div id="'+containerUUID+'" class="container" />').appendTo('#page');
+		containerEl = $('<div id="'+containerUUID+'" class="container-fluid container_outline" />').appendTo('#page');
 		that.views[containerUUID] = new ContainerView({model:newContainer, el:containerEl, options:{uuid:containerUUID}});		
 	}
 	that.addRow = function(options){
@@ -103,9 +107,10 @@ IB.PageController = function(page) {
 		.get('rows')
 		.add(newRow);
 		
-		rowEl = $('<div id="'+rowUUID+'" class="row" />').appendTo('#'+options.containerUUID);
+		rowEl = $('<div id="'+rowUUID+'" class="row-fluid row_outline" />').appendTo('#'+options.containerUUID);
 		
 		that.views[rowUUID] = new RowView({model:newRow, el:rowEl, viewOptions:{uuid:rowUUID, containerUUID:options.containerUUID}});
+		return that;		
 	}
 	that.removeRow = function(options){
 		console.log(options);
@@ -123,20 +128,39 @@ IB.PageController = function(page) {
 	that.addColumn = function(options){
 		
 		var columnUUID = options.uuid || UUID.generate();
-		var newColumn = new Column({uuid: columnUUID, colspan: options.colspan, blocks: null});
+		var newColumn = new Column({uuid: columnUUID, blocks: null});
 				
-		that.page.get('containers').find(function(container){
+		rowColumns = that.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		})
 		.get('rows')
 		.find(function(row){
 			return row.get('uuid') == options.rowUUID;
 		})
-		.get('columns')
-		.add(newColumn);
+		.get('columns');
+		
+		var spanNumber = function(colNum){
+			if(colNum <= 4) return (12/colNum);
+			else if (colNum <= 6) return 2;
+			return 1;
+		}
+		
+		newColumn.colspan = 'span'+spanNumber((_.size(rowColumns)+1));
+		_.each(rowColumns.models, function(rowColumn){
+			
+			columnEl = $('#'+rowColumn.get('uuid'));
+			$(columnEl).removeClass (function (index, css) {
+				    return (css.match (/\bspan\S+/g) || []).join(' ');
+				});
+				
+			$(columnEl).addClass(newColumn.colspan);
+			// that.views[$(rowColumn).attr('uuid')].render();
+		});
+		
+		rowColumns.add(newColumn);
 
-		colEl = $('<div id="'+columnUUID+'" class="column '+options.colspan+'" />').appendTo('#'+options.rowUUID);		
-		that.views[columnUUID] = new ColumnView({model:newColumn, el:colEl});
+		colEl = $('<div id="'+columnUUID+'" class="column column_outline '+newColumn.colspan+'" />').appendTo('#'+options.rowUUID);		
+		that.views[columnUUID] = new ColumnView({model:newColumn, el:colEl, rowUUID: options.rowUUID, containerUUID:options.containerUUID});
 	}
 	
 	that.addBlock = function(options){
@@ -175,18 +199,6 @@ $(document).ready(function(){
 									    data: {}
 									}
 								}
-	    					},
-					        column2: {
-								uuid: 'column2',
-						        colspan: 'span6',
-							    blocks: {
-								    block2: {
-										uuid: 'block2',
-									    template: {},
-									    order: {},
-									    data: {}
-									}
-								}
 	    					}
 	    				}
 	        		}
@@ -201,5 +213,7 @@ PageController.build(data);
 // 	containeruuid: 'container1',
 // 	columns: ['span8','span4']
 // 	});
-	
+
+
+
 });
