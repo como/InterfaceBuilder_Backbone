@@ -10,8 +10,8 @@
 <style>
 .page {margin-top:10px;}
 .container_outline {border: 1px dotted #666; min-height: 50px;}
-.row_outline {margin-top: 10px; margin-bottom: 10px; background: #fff; border-top: 2px solid #666; border: 1px dotted #666;}
-.row_outline:hover {border: 1px dotted #4a9bff;}
+.row_outline {margin-top: 10px; margin-bottom: 10px; background: #fff; border-top: 2px solid #666; border: 1px dotted #666; border-top: 4px solid #666;}
+.row_outline:hover {border: 1px dotted #4a9bff;  border-top: 4px solid #4a9bff;}
 .column_outline {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAKElEQVQIW2NkQANpaWn/GZHFQAKzZs1ihAvCBECKwILIAmBBdAGQIABhihI3cAJZSwAAAABJRU5ErkJggg==) repeat; }
 .column_outline:hover {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAALElEQVQIW2NkwAK8Zv//z4guDhLclsrIiCIBEwQphksgC8Il0AXBEtgEQRIAZYYW6jbeKcYAAAAASUVORK5CYII=) repeat; }
 </style>
@@ -19,11 +19,13 @@
 
 <body>
 	<script id="container-template" type="text/template">
-	
+	<a href="#" onclick="PageController.removeContainer({uuid: '<%= uuid %>'})">x</a>
+	<div class="rows">
+	</div>
 	</script>
 	<script id="row-template" type="text/template">
-	
-<!--		<a class="pull-right" href="#" onclick="PageController.removeRow({containerUUID:'<%= containerUUID %>', uuid:'<%= uuid %>'})">x</a> -->
+	Row <%= content %>
+	<a href="#" onclick="PageController.removeRow({containerUUID: '<%= options.containerUUID %>',uuid:'<%= uuid %>'})">x</a>
 	</script>
 	<script id="column-template" type="text/template">
 	Content
@@ -35,8 +37,20 @@
 	<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 	<script src="backbone.marionette/underscore.js"></script>
 	<script src="backbone.marionette/backbone.js"></script>
-	<script src="backbone.marionette/backbone.marionette.js"></script>
-	<script src="app.js"></script>
+	<script src="backbone.marionette/backbone.marionette.js"></script>	
 	<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+	<script src="models.js"></script>
+	<script src="views.js"></script>
+	<script src="controllers.js"></script>
+	<script>
+	$(document).ready(function(){
+	currentPage = new Page({id:1});
+	currentPage.fetch({
+		    success: function () {
+					PageController = new IB.PageController(currentPage);
+		    }
+		});
+	});
+	</script>
 </body>
 </html>
