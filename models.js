@@ -29,9 +29,13 @@ var Row = Backbone.Model.extend({
 });
 
 var Column = Backbone.Model.extend({
+	defaults: {
+		'colspan': 12
+	},
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();
 		this.set('uuid', uuid);
+		if(attrs.colspan) this.set('colspan', attrs.colspan);
 	}
 });
 

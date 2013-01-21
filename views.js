@@ -100,7 +100,7 @@ var RowView = Backbone.View.extend({
     this.model.get('columns').bind('remove', this.removeColumn);		
 	},
 	addColumn: function(column){
-		var cmv = new ColumnView({model:column, rowUUID: this.model.get('uuid'), containerUUID: this.options.containerUUID});
+		var cmv = new ColumnView({model:column, id: column.get('uuid'),rowUUID: this.model.get('uuid'), containerUUID: this.options.containerUUID, className:'column column_outline span'+column.get('colspan')});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
       $(this.el).append(cmv.render().el);
@@ -138,7 +138,6 @@ var RowView = Backbone.View.extend({
 
 var ColumnView = Backbone.View.extend({
 	tagName: 'div',
-	className: 'column span4 column_outline',
 	initialize: function(){
 		this.template = '#column-template';
 	},
@@ -146,11 +145,10 @@ var ColumnView = Backbone.View.extend({
 		'dblclick': 'addOne',
 	},
 	addOne: function(){
-		console.log('split column');
-		// PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
+		//console.log(this.options);
+		PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
 	render: function(){
-		
 		
 		this.$el.html(_.template($(this.template).html(), {}));
 		return this;

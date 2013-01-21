@@ -33,11 +33,8 @@ IB.PageController = function(page) {
 		
 	}
 	this.addColumn = function(options){
-		
-		var columnUUID = options.uuid || UUID.generate();
-		var newColumn = new Column({uuid: columnUUID, blocks: null});
-				
-		rowColumns = this.page.get('containers').find(function(container){
+						
+		var rowColumns = this.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		})
 		.get('rows')
@@ -52,23 +49,22 @@ IB.PageController = function(page) {
 			return 1;
 		}
 
+		var colspan = spanNumber((_.size(rowColumns)+1));
 		
-		newColumn.colspan = 'span'+spanNumber((_.size(rowColumns)+1));
 		_.each(rowColumns.models, function(rowColumn){
 			
 			columnEl = $('#'+rowColumn.get('uuid'));
 			$(columnEl).removeClass (function (index, css) {
 				    return (css.match (/\bspan\S+/g) || []).join(' ');
 				});
-				
-			$(columnEl).addClass(newColumn.colspan);
-			// that.views[$(rowColumn).attr('uuid')].render();
+			$(columnEl).addClass('span'+colspan);
+			
+			rowColumn.set('colspan',colspan);
+			
 		});
 		
-		rowColumns.add(newColumn);
+		rowColumns.add(new Column({colspan:colspan}));
 
-		colEl = $('<div id="'+columnUUID+'" class="column column_outline '+newColumn.colspan+'" />').appendTo('#'+options.rowUUID);		
-		this.views[columnUUID] = new ColumnView({model:newColumn, el:colEl, rowUUID: options.rowUUID, containerUUID:options.containerUUID});
 	}
 
 }

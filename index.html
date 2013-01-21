@@ -50,7 +50,10 @@
 	currentPage.fetch({
 		    success: function () {
 					PageController = new IB.PageController(currentPage);
-		    }
+		    },
+				error: function () {
+					PageController = new IB.PageController(new Page());
+				}
 		});
 	});
 	</script>
