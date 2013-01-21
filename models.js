@@ -22,14 +22,23 @@ var Container = Backbone.Model.extend({
 var Row = Backbone.Model.extend({
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();
-		columns = attrs.columns;
+		columns = attrs.columns || {};
 		this.set('uuid', uuid);
 		this.set('columns', new Columns(columns));
 	}
 });
 
-var Column = Backbone.Model.extend({});
+var Column = Backbone.Model.extend({
+	initialize: function(attrs){
+		uuid 		= attrs.uuid || UUID.generate();
+		this.set('uuid', uuid);
+	}
+});
+
 var Block = Backbone.Model.extend({});
+
+
+// Collections
 
 var Containers = Backbone.Collection.extend({model: Container});
 var Rows = Backbone.Collection.extend({model: Row});

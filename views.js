@@ -21,14 +21,15 @@ var PageView = Backbone.View.extend({
     var viewToRemove = _(this._containerViews).select(function(cv) { return cv.model === container; })[0];
     this._containerViews = _(this._containerViews).without(viewToRemove);
     if (this._rendered) $(viewToRemove.el).remove();		
+		// Unbind everything here.. 
 	},
 	render: function(){
-		console.log('rendering page');
+
     this._rendered = true;
  
     $(this.el).empty();
 		
-		that = this;
+		var that = this;
  
     _(this._containerViews).each(function(cv) {
       that.$el.append(cv.render().el);
@@ -40,7 +41,8 @@ var ContainerView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'container-fluid container_outline',
 	initialize: function(attrs){
-		this._rowViews = [];		
+
+		this._rowViews = [];
 		
 		_(this).bindAll('addRow', 'removeRow');		
 		this.model.get('rows').each(this.addRow);		
@@ -60,26 +62,29 @@ var ContainerView = Backbone.View.extend({
 		    var viewToRemove = _(this._rowViews).select(function(cv) { return cv.model === row; })[0];
 		    this._rowViews = _(this._rowViews).without(viewToRemove);
 		    if (this._rendered) $(viewToRemove.el).remove();		
+				// Unbind everything here.. 
 	},
 	render: function(){
-		console.log('rendering container');
+		
     this._rendered = true;
  
     $(this.el).empty();
 		
-		that = this;
+		var that = this;
 		
-		this.$el.html(_.template($('#container-template').html(), {uuid: this.model.get('uuid')}));
+		this.compile();
  
-    _(this._rowViews).each(function(rv) {
-      that.$('.rows').append(rv.render().el);
+    _(this._rowViews).each(function(rv) {		
+     that.$('.rows').append(rv.render().el);
     });
  
     return this;	
 	},
-	remove: function(){
-		this.$el.remove();
-		this.$el.unbind();
+	compile: function(){
+		if(this.compiled) return;
+		
+		this.$el.html(_.template($('#container-template').html(), {uuid: this.model.get('uuid')}));
+		this.compiled = true;
 	}
 });
 
@@ -87,37 +92,68 @@ var RowView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'row-fluid row_outline',
 	initialize: function(attrs){
-		
-		_(this).bindAll('update');
+		this._columnViews = [];
+		_(this).bindAll('update','addColumn', 'removeColumn');
 		this.model.bind('change', this.update);
+		this.model.get('columns').each(this.addColumn);		
+    this.model.get('columns').bind('add', this.addColumn);
+    this.model.get('columns').bind('remove', this.removeColumn);		
+	},
+	addColumn: function(column){
+		var cmv = new ColumnView({model:column, rowUUID: this.model.get('uuid'), containerUUID: this.options.containerUUID});
+		this._columnViews.push(cmv);		
+    if (this._rendered) {
+      $(this.el).append(cmv.render().el);
+    }
+		
+	},
+	removeColumn: function(column){
+		    var viewToRemove = _(this._columnViews).select(function(cv) { return cv.model === column; })[0];
+		    this._columnViews = _(this._columnViews).without(viewToRemove);
+		    if (this._rendered) $(viewToRemove.el).remove();		
+				// Unbind everything here.. 
 	},
 	update: function(){
-		console.log(this.render().el);
+		
+		this.render();
 	},
 	render: function(){
-		console.log('rendering ' + this.model.get('uuid'));
+		
+    this._rendered = true;
+ 
+    $(this.el).empty();
+		
+		var that = this;
+		
 		this.$el.html(_.template($('#row-template').html(), {uuid: this.model.get('uuid'), content:this.model.get('uuid'), options:this.options}));
+		
+    _(this._columnViews).each(function(cmv) {
+      that.$('.columns').append(cmv.render().el);
+    });
+		
+		
 		return this;
-	},
-	remove: function(){
-		this.$el.remove();
-		this.$el.unbind();
 	}
 });
 
 var ColumnView = Backbone.View.extend({
+	tagName: 'div',
+	className: 'column span4 column_outline',
 	initialize: function(){
 		this.template = '#column-template';
-		this.render();	
 	},
 	events: {
 		'dblclick': 'addOne',
 	},
 	addOne: function(){
-		PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
+		console.log('split column');
+		// PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
 	render: function(){
+		
+		
 		this.$el.html(_.template($(this.template).html(), {}));
+		return this;
 	}
 });
 
