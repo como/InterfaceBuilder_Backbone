@@ -1,3 +1,9 @@
+/**
+Todo:
+
+1. Implement fluid layout resizing
+
+*/
 var IB = IB || {};
 
 IB.cssSandbox = function (){
@@ -5,10 +11,11 @@ IB.cssSandbox = function (){
 	this._columnWidths = [];
 	var that = this;
 	
-	$.each($('#css-sandbox-row').children(), function(index, child){
+	$.each($('#css-sandbox-'+IB.rowClass).children(), function(index, child){
 		that._columnWidths.push([$(child).attr('class'),$(child).width()]);
 	});
 	
+	console.log(this._columnWidths);
 	
 	this.findColumnClassByWidth = function (width) {
 		var className = '';
@@ -59,6 +66,8 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 				minWidth: IB.cssSandboxInstance.getColspanDiff(),
 	      grid: IB.cssSandboxInstance.getColspanDiff(),
 				resize: function( event, ui ) {
+					// console.log(ui.size.width);
+					// console.log(IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width));
 					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);				
 					IB.PageControllerInstance.updateColspan({columnUUID: el.attr('id'), rowUUID: rowUUID, containerUUID: containerUUID, colspan: activeColumnClass});
 				}
