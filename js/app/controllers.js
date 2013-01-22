@@ -13,6 +13,9 @@ var IB = IB || {};
 IB.PageController = function(page) {
 	this.page = page;	
 	this.view = new PageView({model:page, el:'#page'});
+	
+	IB.initUI();
+	
 	this.addContainer = function(options){		
 		this.page.get('containers').add(new Container(options));
 	}

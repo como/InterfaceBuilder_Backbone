@@ -21,14 +21,14 @@
 	
 	<script id="container-template" type="text/template">
 	<div class="row">
-		<div class="span12 handle "><a href="#" class="ib-control pull-right" onclick="PageController.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
+		<div class="span12 handle container-handle "><a href="#" class="ib-control pull-right" onclick="PageController.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
 	</div>
 	<div class="rows">
 	</div>
 	</script>
 	
 	<script id="row-template" type="text/template">
-	<div class="span12 handle">
+	<div class="span12 handle row-handle">
 		<a href="#" class="ib-control pull-right" onclick="PageController.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
 	</div>
 	<div class="columns">
@@ -36,8 +36,7 @@
 	</script>
 	
 	<script id="column-template" type="text/template">
-	<div class="handle"></div>
-	Column <%= content %>
+	<div class="handle column-handle"></div>
 	<div class="blocks">
 	</div>
 
@@ -48,31 +47,34 @@
 	<!-- Start block Templates -->
 	
 	<script id="text-block-template" type="text/template">
-	<a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	
 	Rich Text <%= content %> 
 
 	</script>
 	
 	<script id="table-block-template" type="text/template">
-	<a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a>
-	Table <%= content %>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	
+		Table <%= content %>
 	</script>
 	
 	<script id="video-block-template" type="text/template">
-	<a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a>
-	Video <%= content %> 
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	
+		Video <%= content %> 
 	</script>
 	
 	<!-- End block Templates -->
 	
 	<!-- Begin Sidebar -->
 	<div id="sidebarbtn">
-		<i class="icon-th-list icon-white"></i>
+		<a href="#" onclick="IB.toggleSidebar()"><i class="icon-th-list icon-white"></i></a>
 	</div>
 	
 	<div id="sidebar">
 		<div class="pull-right">
-		<a class="btn btn-mini btn-inverse" onclick="toggleSidebar()"><i class="icon-remove icon-white"></i></a>
+		<a class="btn btn-mini btn-inverse" onclick="IB.toggleSidebar()"><i class="icon-remove icon-white"></i></a>
 		</div>
 		<br/>
 		
@@ -86,7 +88,7 @@
 			<li><a href="#"><div class="sidebar_row" data-template="row-template">Row</div></a>
 
 		  <li class="nav-header">Blocks</li>
-		  <li><a href="#"><div class="sidebar_blocks" data-template="video-block-template">Video</div></a></li>			
+		  <li><a href="#"><div class="sidebar_block" data-template="video-block-template">Video</div></a></li>			
 		</ul>
 	</div>
 	<!-- End Sidebar -->
@@ -99,10 +101,10 @@
 	<script src="vendor/underscore-min.js"></script>
 	<script src="vendor/backbone-min.js"></script>
 	<script src="vendor/bootstrap.min.js"></script>
+	<script src="js/app/ui.js"></script>
 	<script src="js/app/models.js"></script>
 	<script src="js/app/views.js"></script>
 	<script src="js/app/controllers.js"></script>
-	<script src="js/app/ui.js"></script>
 	<script>
 	$(document).ready(function(){
 	currentPage = new Page({id:1});
@@ -114,34 +116,6 @@
 					PageController = new IB.PageController(new Page());
 				}
 		});
-		
-		$( ".sidebar_container" ).draggable({
-			scope: "containers",
-		    connectToSortable: ".page",
-		    helper: "clone",
-		    revert: "invalid"
-		});
-
-	
-		$( ".sidebar_rows" ).draggable({
-			scope: "rows",
-		    connectToSortable: ".container",
-		    helper: "clone",
-		    revert: "invalid"
-		});
-		
-		$( ".sidebar_blocks" ).draggable({
-			scope: "columns",
-		    connectToSortable: ".column",
-		    helper: "clone",
-		    revert: "invalid"
-		});
-	
-		$("#sidebarbtn").click(function(){
-			toggleSidebar();
-		});
-		
-		$('.handle').hide();
 	});
 	</script>
 </body>

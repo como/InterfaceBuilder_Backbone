@@ -3,6 +3,8 @@ body {
 }
 
 .page {
+	height: auto;
+	width: auto;
 }
 
 #sidebar_scaffolds, #sidebar_blocks {
@@ -14,13 +16,26 @@ body {
 .row-outline:hover {border: 0px dotted #4a9bff; /* border-top: 4px solid #4a9bff;*/}
 .column-outline {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAKElEQVQIW2NkQANpaWn/GZHFQAKzZs1ihAvCBECKwILIAmBBdAGQIABhihI3cAJZSwAAAABJRU5ErkJggg==) repeat; }
 .column-outline:hover {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAALElEQVQIW2NkwAK8Zv//z4guDhLclsrIiCIBEwQphksgC8Il0AXBEtgEQRIAZYYW6jbeKcYAAAAASUVORK5CYII=) repeat; }
-.ib-block {
-	border: 1px dotted #333;
+
+.container-handle {
+	position: relative;
+	width: 100%;
+	cursor: move;
+	min-height: 5px;
+	border-top: 4px solid #eed922;
+	margin-bottom: 2px;
 }
 
+.row-handle {
+	position: relative;
+	width: 100%;
+	cursor: move;
+	min-height: 5px;
+	border-top: 4px solid #cc270e;
+	margin-bottom: 2px;
+}
 
-.handle {
-	display: none;
+.block-handle {
 	position: relative;
 	width: 100%;
 	cursor: move;
@@ -29,11 +44,15 @@ body {
 	margin-bottom: 2px;
 }
 
+
 .ib-control {
-	display: none;
 }
 
-.handle:hover {
+.row-handle:hover {
+	border-top: 4px solid #4a9bff;
+}
+
+.container-handle:hover {
 	border-top: 4px solid #4a9bff;
 }
 

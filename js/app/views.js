@@ -32,7 +32,7 @@ var PageView = Backbone.View.extend({
 		// Unbind everything here.. 
 	},
 	render: function(){
-
+		console.log('rendering page');
     this._rendered = true;
  
     $(this.el).empty();
@@ -117,7 +117,7 @@ var RowView = Backbone.View.extend({
 			id: column.get('uuid'),
 			rowUUID: this.model.get('uuid'), 
 			containerUUID: this.options.containerUUID, 
-			className:'ib-column span'+column.get('colspan')
+			className:'ib-column column-outline span'+column.get('colspan')
 		});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
@@ -216,7 +216,6 @@ var BlockView = Backbone.View.extend({
 	className: 'ib-block',
 	initialize: function(){
 		_(this).bindAll('update');
-		console.log(this);
 		this.model.bind('change', this.update);
 		this.template = '#'+this.model.get('template');
 	},
