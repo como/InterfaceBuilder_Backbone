@@ -1,8 +1,8 @@
 /**
 To do:
-1. Blocks
-2. Order Persistence
-3. UI
+// 1. Blocks
+2. UI
+3. Order Persistence
 4. Routing
 5. Offsets
 6. Full persistence
