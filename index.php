@@ -49,9 +49,9 @@
 	
 	<script id="text-block-template" type="text/template">
 	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
-	
+	<div contentEditable="true">
 	Rich Text <%= content %> 
-
+	</div>
 	</script>
 	
 	<script id="video-block-template" type="text/template">
@@ -69,7 +69,7 @@
 	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
   <div class="block block-2">
-	<div class="portlet-content clearfix">
+	<div class="portlet-content clearfix" contentEditable="true">
       	<h2>News</h2>
           <ul class="news wrap">
             <li>
@@ -221,7 +221,7 @@
 		</ul>
 	</div>
 	<!-- End Sidebar -->
-	
+
 	<div id="page">
 	</div>	
 	<script src="vendor/uuid.core.js"></script>
@@ -247,6 +247,44 @@
 					IB.PageControllerInstance = new IB.PageController(new Page());
 				}
 		});
+		
+		// This code is generally not necessary, but it is here to demonstrate
+		// how to customize specific editor instances on the fly. This fits well
+		// this demo because we have editable elements (like headers) that
+		// require less features.
+
+		// The "instanceCreated" event is fired for every editor instance created.
+		
+		// CKEDITOR.on( 'instanceCreated', function( event ) {
+		// 	console.log('instance created');
+		// 	var editor = event.editor,
+		// 		element = editor.element;
+		// 
+		// 	// Customize editors for headers and tag list.
+		// 	// These editors don't need features like smileys, templates, iframes etc.
+		// 	if ( element.is( 'h1', 'h2', 'h3' ) || element.getAttribute( 'id' ) == 'taglist' ) {
+		// 		// Customize the editor configurations on "configLoaded" event,
+		// 		// which is fired after the configuration file loading and
+		// 		// execution. This makes it possible to change the
+		// 		// configurations before the editor initialization takes place.
+		// 		editor.on( 'configLoaded', function() {
+		// 
+		// 			// Remove unnecessary plugins to make the editor simpler.
+		// 			editor.config.removePlugins = 'colorbutton,find,flash,font,' +
+		// 				'forms,iframe,image,newpage,removeformat,' +
+		// 				'smiley,specialchar,stylescombo,templates';
+		// 
+		// 			// Rearrange the layout of the toolbar.
+		// 			editor.config.toolbarGroups = [
+		// 				{ name: 'editing',		groups: [ 'basicstyles', 'links' ] },
+		// 				{ name: 'undo' },
+		// 				{ name: 'clipboard',	groups: [ 'selection', 'clipboard' ] },
+		// 				{ name: 'about' }
+		// 			];
+		// 		});
+		// 	}
+		// });
+		
 	});
 	</script>
 </body>

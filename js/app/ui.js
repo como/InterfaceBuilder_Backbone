@@ -169,6 +169,9 @@ IB.initUI = function(){
 			IB.setState('saved');
 		});
 		
+		$('<script src="vendor/ckeditor/ckeditor.js"></script>').appendTo('head');
+
+		
 }
 
 IB.setState = function(state){
@@ -191,7 +194,7 @@ IB.toggleSidebar = function () {
 				$('.ib-row').addClass('row-outline');
 				$('.ib-container').addClass('container-outline');
 				$('.blocks').addClass('blocks-outline');
-				$('#page').css('margin-left', '200px');
+				// $('#page').css('margin-left', '200px');
 				$( ".ui-resizable-handle" ).show();
 	    }
 	    else {
@@ -201,7 +204,7 @@ IB.toggleSidebar = function () {
 				$('.ib-row').removeClass('row-outline');
 				$('.ib-container').removeClass('container-outline');
 				$('.blocks').removeClass('blocks-outline');
-				$('#page').css('margin-left', '0px');
+				// $('#page').css('margin-left', '0px');
 				$( ".ui-resizable-handle" ).hide();
 	    }
     });

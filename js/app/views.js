@@ -177,7 +177,7 @@ var ColumnView = Backbone.View.extend({
     this.model.get('blocks').bind('remove', this.removeBlock);		
 	},
 	events: {
-		'dblclick': 'addOne',
+		'dblclick .handle': 'addOne',
 	},
 	addBlock: function(block){
 		var bv = new BlockView({
@@ -247,7 +247,6 @@ var BlockView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
-		console.log(this.model.get('content'));
 		this.$el.html(_.template($(this.template).html(), {
 			uuid: this.model.get('uuid'), 
 			columnUUID: this.options.columnUUID, 

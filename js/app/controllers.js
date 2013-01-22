@@ -16,6 +16,7 @@ IB.PageController = function(page) {
 	
 	IB.initUI();
 	
+	
 	this.addContainer = function(options){		
 		this.page.get('containers').makePlace(options.order).add(new Container(options));
 		IB.setState('editing');
