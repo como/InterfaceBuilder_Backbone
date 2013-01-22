@@ -1,3 +1,13 @@
+/**
+To do:
+1. Blocks
+2. Order Persistence
+3. UI
+4. Routing
+5. Offsets
+6. Full persistence
+*/
+
 var IB = IB || {};
 
 IB.PageController = function(page) {
@@ -65,6 +75,26 @@ IB.PageController = function(page) {
 		
 		rowColumns.add(new Column({colspan:colspan}));
 
+	}
+	
+	this.addBlock = function(options){
+						
+		var columnBlocks = this.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
+		})
+		.get('rows')
+		.find(function(row){
+			return row.get('uuid') == options.rowUUID;
+		})
+		.get('columns')
+		.find(function(column){
+			return column.get('uuid') == options.columnUUID;
+		})
+		.get('blocks')
+		.add(new Block({template: options.template}));
+		
+		console.log(columnBlocks);
+		
 	}
 
 }

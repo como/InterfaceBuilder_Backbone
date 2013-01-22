@@ -18,20 +18,46 @@
 </head>
 
 <body>
+	
+	<!-- Start scaffolding Templates -->
+	
 	<script id="container-template" type="text/template">
 	<a href="#" onclick="PageController.removeContainer({uuid: '<%= uuid %>'})">x</a>
 	<div class="rows">
 	</div>
 	</script>
+	
 	<script id="row-template" type="text/template">
 	Row <%= content %>
 	<a href="#" onclick="PageController.removeRow({containerUUID: '<%= options.containerUUID %>',uuid:'<%= uuid %>'})">x</a>
 	<div class="columns">
 	</div>
 	</script>
+	
 	<script id="column-template" type="text/template">
-	Content
+	Column <%= content %>
+	<div class="blocks">
+	</div>
 	</script>
+	
+	<!-- End scaffolding Templates -->
+	
+	<!-- Start block Templates -->
+	
+	<script id="text-block-template" type="text/template">
+	Rich Text <%= content %>
+	</script>
+	
+	<script id="table-block-template" type="text/template">
+	Table <%= content %>
+	</script>
+	
+	<script id="video-block-template" type="text/template">
+	Video <%= content %>
+	</script>
+	
+	<!-- End block Templates -->
+	
 	<div id="page">
 	</div>	
 	<script src="uuid.core.js"></script>

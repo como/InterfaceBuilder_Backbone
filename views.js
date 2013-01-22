@@ -100,21 +100,25 @@ var RowView = Backbone.View.extend({
     this.model.get('columns').bind('remove', this.removeColumn);		
 	},
 	addColumn: function(column){
-		var cmv = new ColumnView({model:column, id: column.get('uuid'),rowUUID: this.model.get('uuid'), containerUUID: this.options.containerUUID, className:'column column_outline span'+column.get('colspan')});
+		var cmv = new ColumnView({
+			model:column, 
+			id: column.get('uuid'),
+			rowUUID: this.model.get('uuid'), 
+			containerUUID: this.options.containerUUID, 
+			className:'column column_outline span'+column.get('colspan')
+		});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
       $(this.el).append(cmv.render().el);
-    }
-		
+    }		
 	},
 	removeColumn: function(column){
-		    var viewToRemove = _(this._columnViews).select(function(cv) { return cv.model === column; })[0];
-		    this._columnViews = _(this._columnViews).without(viewToRemove);
-		    if (this._rendered) $(viewToRemove.el).remove();		
-				// Unbind everything here.. 
+    var viewToRemove = _(this._columnViews).select(function(cv) { return cv.model === column; })[0];
+    this._columnViews = _(this._columnViews).without(viewToRemove);
+    if (this._rendered) $(viewToRemove.el).remove();		
+		// Unbind everything here.. 
 	},
 	update: function(){
-		
 		this.render();
 	},
 	render: function(){
@@ -138,21 +142,76 @@ var RowView = Backbone.View.extend({
 
 var ColumnView = Backbone.View.extend({
 	tagName: 'div',
+	className: 'block',
 	initialize: function(){
+		this._blockViews = [];
 		this.template = '#column-template';
+		_(this).bindAll('update','addBlock','removeBlock');
+		this.model.bind('change', this.update);
+		this.model.get('blocks').each(this.addBlock);		
+    this.model.get('blocks').bind('add', this.addBlock);
+    this.model.get('blocks').bind('remove', this.removeBlock);		
 	},
 	events: {
 		'dblclick': 'addOne',
 	},
+	addBlock: function(block){
+		
+		var bv = new BlockView({
+			model:block, 
+			id: block.get('uuid'), 
+			columnUUID: this.model.get('uuid'), 
+			rowUUID: this.options.containerUUID, 
+			containerUUID: this.options.containerUUID
+		});
+		
+		this._blockViews.push(bv);		
+    if (this._rendered) {
+      $(this.el).append(bv.render().el);
+    }
+	},
+	removeBlock: function(block){
+    var viewToRemove = _(this._blockViews).select(function(bv) { return bv.model === block; })[0];
+    this._blockViews = _(this._blockViews).without(viewToRemove);
+    if (this._rendered) $(viewToRemove.el).remove();		
+		// Unbind everything here.. 
+	},
 	addOne: function(){
-		//console.log(this.options);
 		PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
-	render: function(){
+	update: function(){
+		this.render();
+	},
+	render: function(){		
 		
-		this.$el.html(_.template($(this.template).html(), {}));
+    this._rendered = true;
+ 
+    $(this.el).empty();
+		
+		var that = this;
+		
+		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid')}));
+		
+    _(this._blockViews).each(function(cmv) {
+      that.$('.blocks').append(cmv.render().el);
+    });
+		
 		return this;
 	}
 });
 
-var BlockView = Backbone.View.extend({});
+var BlockView = Backbone.View.extend({
+	tagName: 'div',
+	initialize: function(){
+		_(this).bindAll('update');
+		this.model.bind('change', this.update);
+		this.template = '#'+this.model.get('template');
+	},
+	update: function(){
+		this.render();
+	},
+	render: function(){
+		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid')}));
+		return this;
+	}	
+});

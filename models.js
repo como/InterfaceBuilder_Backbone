@@ -33,13 +33,22 @@ var Column = Backbone.Model.extend({
 		'colspan': 12
 	},
 	initialize: function(attrs){
-		uuid 		= attrs.uuid || UUID.generate();
+		uuid 	 = attrs.uuid || UUID.generate();
 		this.set('uuid', uuid);
-		if(attrs.colspan) this.set('colspan', attrs.colspan);
+		if(attrs.blocks) this.set('blocks', new Blocks(attrs.blocks));
+		else this.set('blocks', new Blocks());
 	}
 });
 
-var Block = Backbone.Model.extend({});
+var Block = Backbone.Model.extend({
+	defaults: {
+		'template':'text-block-template'
+	},
+	initialize: function(attrs){
+		uuid 		= attrs.uuid || UUID.generate();
+		this.set('uuid', uuid);
+	}
+});
 
 
 // Collections
