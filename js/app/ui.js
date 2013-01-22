@@ -20,8 +20,8 @@ IB.initUI = function(){
 	});
 		
 	$( ".sidebar_block" ).draggable({
-		scope: "columns",
-	    connectToSortable: ".column",
+		scope: "blocks",
+	    connectToSortable: ".ib-column",
 	    helper: "clone",
 	    revert: "invalid"
 	});
@@ -31,15 +31,14 @@ IB.initUI = function(){
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
-				if(ui.draggable.hasClass("ib-container")){
-					console.log(this);
-				}
+				IB.PageControllerInstance.addContainer({});
+				ui.draggable.remove();
 			}
 		}).sortable({
 			handle: ".container-handle",
 			connectWith: "#page",
 			update: function( event, ui ) {
-				console.log('update');
+			//	console.log('update');
 			}
 		});
 		
@@ -48,15 +47,15 @@ IB.initUI = function(){
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
-				if(ui.draggable.hasClass("ib-row")){
-					console.log(this);
-				}
+				IB.PageControllerInstance.addRow({containerUUID:$(this).children('.rows').data('uuid')});
+				ui.draggable.remove();
+				
 			}
 		}).sortable({
 			handle: ".row-handle",
 			connectWith: ".ib-container",
 			update: function( event, ui ) {
-				console.log('update');
+				//console.log('update');
 			}
 		});		
 			
@@ -65,15 +64,19 @@ IB.initUI = function(){
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
-				if(ui.draggable.hasClass("ib-block")){
-					console.log(this);
-				}
+				IB.PageControllerInstance.addBlock({
+					columnUUID: $(this).children('.blocks').data('uuid'), 
+					rowUUID:$(this).children('.blocks').data('row'), 
+					containerUUID:$(this).children('.blocks').data('container'),
+					template: $(ui.draggable).data('template')
+				});
+				ui.draggable.remove();
 			}
 		}).sortable({
 			handle: ".block-handle",
 			connectWith: ".ib-column",
 			update: function( event, ui ) {
-				console.log('update');
+				//console.log('update');
 			}
 		});					
 			
@@ -89,7 +92,6 @@ IB.toggleSidebar = function () {
 	    	$('.ib-column').addClass('column-outline'); 
 				$('.ib-row').addClass('row-outline');
 				$('.ib-container').addClass('container-outline');
-				$('.ib-column').css('min-height','50px');
 	    }
 	    else {
 		    $('.handle').fadeOut();								

@@ -32,7 +32,6 @@ var PageView = Backbone.View.extend({
 		// Unbind everything here.. 
 	},
 	render: function(){
-		console.log('rendering page');
     this._rendered = true;
  
     $(this.el).empty();
@@ -188,7 +187,7 @@ var ColumnView = Backbone.View.extend({
 		// Unbind everything here.. 
 	},
 	addOne: function(){
-		PageController.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
+		IB.PageControllerInstance.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
 	update: function(){
 		this.render();
@@ -201,7 +200,7 @@ var ColumnView = Backbone.View.extend({
 		
 		var that = this;
 		
-		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid')}));
+		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid'), uuid: this.model.get('uuid'), options:this.options}));
 		
     _(this._blockViews).each(function(cmv) {
       that.$('.blocks').append(cmv.render().el);

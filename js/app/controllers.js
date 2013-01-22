@@ -11,6 +11,7 @@ To do:
 var IB = IB || {};
 
 IB.PageController = function(page) {
+	
 	this.page = page;	
 	this.view = new PageView({model:page, el:'#page'});
 	

@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Canvas</title>
 <link href="vendor/smoothness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet">
-<link href="css/canvas.css" rel="stylesheet">
 <link href="vendor/bootstrap.css" rel="stylesheet">
 <link href="vendor/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/canvas.css" rel="stylesheet">
 	
 <!-- Site CSS -->
 <link href="css/site/theme.css" rel="stylesheet">
@@ -21,23 +21,23 @@
 	
 	<script id="container-template" type="text/template">
 	<div class="row">
-		<div class="span12 handle container-handle "><a href="#" class="ib-control pull-right" onclick="PageController.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
+		<div class="span12 handle container-handle "><a href="#" class="ib-control pull-right" onclick="App.PageController.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
 	</div>
-	<div class="rows">
+	<div class="rows" data-uuid="<%= uuid %>">
 	</div>
 	</script>
 	
 	<script id="row-template" type="text/template">
 	<div class="span12 handle row-handle">
-		<a href="#" class="ib-control pull-right" onclick="PageController.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
+		<a href="#" class="ib-control pull-right" onclick="App.PageController.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
 	</div>
-	<div class="columns">
+	<div class="columns" data-uuid="<%= uuid %>" data-container="<%= options.containerUUID %>">
 	</div>
 	</script>
 	
 	<script id="column-template" type="text/template">
 	<div class="handle column-handle"></div>
-	<div class="blocks">
+	<div class="blocks" data-uuid="<%= uuid %>" data-row="<%= options.rowUUID %>" data-container="<%= options.containerUUID %>">
 	</div>
 
 	</script>
@@ -47,20 +47,20 @@
 	<!-- Start block Templates -->
 	
 	<script id="text-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 	Rich Text <%= content %> 
 
 	</script>
 	
 	<script id="table-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 		Table <%= content %>
 	</script>
 	
 	<script id="video-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 		Video <%= content %> 
 	</script>
@@ -106,14 +106,15 @@
 	<script src="js/app/views.js"></script>
 	<script src="js/app/controllers.js"></script>
 	<script>
+
 	$(document).ready(function(){
-	currentPage = new Page({id:1});
-	currentPage.fetch({
+	IB.currentPage = new Page({id:1});
+	IB.currentPage.fetch({
 		    success: function () {
-					PageController = new IB.PageController(currentPage);
+					IB.PageControllerInstance = new IB.PageController(IB.currentPage);
 		    },
 				error: function () {
-					PageController = new IB.PageController(new Page());
+					IB.PageControllerInstance = new IB.PageController(new Page());
 				}
 		});
 	});
