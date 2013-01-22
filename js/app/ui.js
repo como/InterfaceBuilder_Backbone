@@ -78,24 +78,32 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 				}
 	    });
 	}
+	var that = this;
+	
 	el.children('.blocks').droppable({
 			scope: "blocks",
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
-				IB.PageControllerInstance.addBlock({
-					columnUUID: $(this).data('uuid'), 
-					rowUUID:$(this).data('row'), 
-					containerUUID:$(this).data('container'),
-					template: $(ui.draggable).data('template')
-				});
 				ui.draggable.remove();
 			}
 		}).sortable({
 				handle: ".block-handle",
 				connectWith: ".blocks",
+				beforeStop: function( event, ui ) {
+					that.tmpOrder = ui.placeholder.index();
+				},
+				receive: function( event, ui ) {
+					IB.PageControllerInstance.addBlock({
+						columnUUID: $(this).data('uuid'), 
+						rowUUID:$(this).data('row'), 
+						containerUUID:$(this).data('container'),
+						template: $(ui.sender).data('template'),
+						order: that.tmpOrder
+					});
+				},
 				update: function( event, ui ) {
-					//console.log('update');
+					// console.log($(this).sortable('toArray'));
 				}
 			});
 		//$( ".sidebar_block" ).draggable('options','connectToSortable','.blocks');

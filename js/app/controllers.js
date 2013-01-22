@@ -98,7 +98,8 @@ IB.PageController = function(page) {
 			return column.get('uuid') == options.columnUUID;
 		})
 		.get('blocks')
-		.add(new Block({template: options.template}));
+		.makePlace(options.order)
+		.add(new Block({template: options.template, order: options.order}));
 		
 		IB.setState('editing');
 		

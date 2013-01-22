@@ -67,6 +67,7 @@ var ContainerView = Backbone.View.extend({
 		this._rowViews.push(rv);
 		
     if (this._rendered) {
+			//Very week assertion : FIX THIS FOR ROW INSERTION CONISITENCY!!
 			$(this._rowViews[row.get('order')].el).before(rv.render().el);
     }
 		
@@ -138,6 +139,7 @@ var RowView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
+		//Investigate this line
 		if(_.size(this.model.changed)==1 && this.model.changed.hasOwnProperty('order')) return this;
 		
     this._rendered = true;
@@ -186,9 +188,12 @@ var ColumnView = Backbone.View.extend({
 			containerUUID: this.options.containerUUID
 		});
 		
+		var numBlocks = _.size(this.model.get('blocks'));
+		
 		this._blockViews.push(bv);		
     if (this._rendered) {
-      this.$('.blocks').append(bv.render().el);
+			if(numBlocks > 0 && block.get('order') < (numBlocks-1)) $(this._blockViews[block.get('order')].el).before(bv.render().el);
+			else this.$('.blocks').append(bv.render().el);
     }
 	},
 	removeBlock: function(block){
