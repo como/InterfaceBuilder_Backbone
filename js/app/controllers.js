@@ -121,26 +121,20 @@ IB.PageController = function(page) {
 				
 	}
 	
-	this.updateColspans = function(rowUUID, containerUUID, colspans)
+	this.updateColspan = function(options)
 	{
-		var rowColumns = this.page.get('containers').find(function(container){
-			 return container.get('uuid') == containerUUID;
+		this.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
 		})
 		.get('rows')
 		.find(function(row){
-			return row.get('uuid') == rowUUID;
+			return row.get('uuid') == options.rowUUID;
 		})
-		.get('columns');
-		
-		$.each(rowColumns.models, function(index, column){
-			
-			// $('#'.column.get('uuid')).removeClass (function (index, css) {
-			// 	    return (css.match (/\bspan\S+/g) || []).join(' ');
-			// 	}).addClass(colspans[index]);
-				
-			column.set('colspan', colspans[index].replace('span',''));
-			
-		});
+		.get('columns')
+		.find(function(column){
+			return column.get('uuid') == options.columnUUID;
+		})
+		.set('colspan', options.colspan.replace('span',''));
 		
 	}
 

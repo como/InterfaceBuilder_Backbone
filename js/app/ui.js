@@ -53,7 +53,6 @@ IB.droppableContainer = function(el){
 }
 
 IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
-	console.log('make droppable');
 	if(resizable){
 		el.resizable({
 				containment: '#'+rowUUID,
@@ -61,10 +60,7 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 	      grid: IB.cssSandboxInstance.getColspanDiff(),
 				resize: function( event, ui ) {
 					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);				
-					passiveColspan = (12 - (activeColumnClass.replace('span','')));
-					passiveColumnClass = 'span'+passiveColspan;
-					console.log([activeColumnClass, passiveColumnClass]);
-					IB.PageControllerInstance.updateColspans(rowUUID, containerUUID, [activeColumnClass, passiveColumnClass]);
+					IB.PageControllerInstance.updateColspan({columnUUID: el.attr('id'), rowUUID: rowUUID, containerUUID: containerUUID, colspan: activeColumnClass});
 				}
 	    });
 	}
