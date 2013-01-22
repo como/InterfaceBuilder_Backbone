@@ -103,6 +103,8 @@ IB.toggleSidebar = function () {
 	    	$('.ib-column').addClass('column-outline'); 
 				$('.ib-row').addClass('row-outline');
 				$('.ib-container').addClass('container-outline');
+				$('.blocks').addClass('blocks-outline');
+				$('#page').css('margin-left', '200px');
 	    }
 	    else {
 		    $('.handle').fadeOut();								
@@ -110,6 +112,8 @@ IB.toggleSidebar = function () {
 	    	$('.ib-column').removeClass('column-outline'); 
 				$('.ib-row').removeClass('row-outline');
 				$('.ib-container').removeClass('container-outline');
+				$('.blocks').removeClass('blocks-outline');
+				$('#page').css('margin-left', '0px');
 	    }
     });
     $('#sidebarbtn').toggle('slide', { direction: 'left' }, 500);   
