@@ -1,6 +1,7 @@
 var IB = IB || {};
 
 IB.initUI = function(){
+
 	$('.handle').hide();
 	$('.ib-column').removeClass('column-outline'); 
 	
@@ -14,7 +15,7 @@ IB.initUI = function(){
 	
 	$( ".sidebar_row" ).draggable({
 		scope: "rows",
-	    connectToSortable: ".container",
+	    connectToSortable: ".ib-container",
 	    helper: "clone",
 	    revert: "invalid"
 	});
