@@ -154,7 +154,7 @@ var RowView = Backbone.View.extend({
 	compile: function(){
 		if(this.compiled) return;
 		
-		this.$el.html(_.template($('#row-template').html(), {uuid: this.model.get('uuid'), content:this.model.get('uuid'), options:this.options}));		
+		this.$el.html(_.template($('#row-template').html(), {uuid: this.model.get('uuid'), content:'Content Here', options:this.options}));		
 		
 		this.compiled = true;
 	}
@@ -198,7 +198,7 @@ var ColumnView = Backbone.View.extend({
 		IB.PageControllerInstance.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
 	update: function(){
-		this.render();
+		//this.render();
 	},
 	render: function(){				
     this._rendered = true;
@@ -208,6 +208,8 @@ var ColumnView = Backbone.View.extend({
 		var that = this;
 		
 		this.compile();
+		
+		IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
 		
     _(this._blockViews).each(function(cmv) {
 			
@@ -219,8 +221,7 @@ var ColumnView = Backbone.View.extend({
 	compile: function(){
 		if(this.compiled) return;
 		
-		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid'), uuid: this.model.get('uuid'), options:this.options}));
-		IB.droppableColumn(this.$el);
+		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
 		
 		this.compiled = true;
 	}
@@ -243,7 +244,7 @@ var BlockView = Backbone.View.extend({
 			columnUUID: this.options.columnUUID, 
 			rowUUID: this.options.rowUUID,
 			containerUUID: this.options.containerUUID,
-			content: this.model.get('uuid')
+			content: this.model.get('content')
 		}));
 		return this;
 	}	

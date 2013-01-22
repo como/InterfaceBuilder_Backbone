@@ -2,6 +2,10 @@ body {
 	background: #fff;
 }
 
+#css-sandbox {
+	display: none;
+}
+
 .ui-state-hover
 {
 	border: 0px;

@@ -1,5 +1,37 @@
 var IB = IB || {};
 
+IB.cssSandbox = function (){
+	//$('#css-sandbox-span1').width()
+	this._columnWidths = [];
+	var that = this;
+	
+	$.each($('#css-sandbox-row').children(), function(index, child){
+		that._columnWidths.push([$(child).attr('class'),$(child).width()]);
+	});
+	
+	
+	this.findColumnClassByWidth = function (width) {
+		var className = '';
+		$.each(this._columnWidths, function(index, record){
+			if(record[1] == width) className = record[0];
+		});
+		return className;
+	}
+	
+	this.findWidthByColumnClass = function (className) {
+		var width = 0;
+		$.each(this._columnWidths, function(index, record){
+			if(record[0] == className) width = record[1];
+		});
+		return width;
+	}
+	
+	this.getColspanDiff = function(){
+		return this._columnWidths[1][1]- this._columnWidths[0][1];
+	}
+	
+}
+
 IB.droppableContainer = function(el){
 	el.children('.rows').droppable({
 			scope: "rows",
@@ -20,7 +52,22 @@ IB.droppableContainer = function(el){
 		//$( ".sidebar_row" ).draggable('options','connectToSortable','.rows');
 }
 
-IB.droppableColumn = function(el){
+IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
+	console.log('make droppable');
+	if(resizable){
+		el.resizable({
+				containment: '#'+rowUUID,
+				minWidth: IB.cssSandboxInstance.getColspanDiff(),
+	      grid: IB.cssSandboxInstance.getColspanDiff(),
+				resize: function( event, ui ) {
+					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);				
+					passiveColspan = (12 - (activeColumnClass.replace('span','')));
+					passiveColumnClass = 'span'+passiveColspan;
+					console.log([activeColumnClass, passiveColumnClass]);
+					IB.PageControllerInstance.updateColspans(rowUUID, containerUUID, [activeColumnClass, passiveColumnClass]);
+				}
+	    });
+	}
 	el.children('.blocks').droppable({
 			scope: "blocks",
 			activeClass: "ui-state-hover",
@@ -45,9 +92,10 @@ IB.droppableColumn = function(el){
 }
 
 IB.initUI = function(){
-
+	
 	$('.handle').hide();
-	$('.ib-column').removeClass('column-outline'); 
+	$('.ib-column').removeClass('column-outline');
+	$( ".ui-resizable-handle" ).hide();
 	
 	$( ".sidebar_container" ).draggable({
 		scope: "containers",
@@ -105,6 +153,7 @@ IB.toggleSidebar = function () {
 				$('.ib-container').addClass('container-outline');
 				$('.blocks').addClass('blocks-outline');
 				$('#page').css('margin-left', '200px');
+				$( ".ui-resizable-handle" ).show();
 	    }
 	    else {
 		    $('.handle').fadeOut();								
@@ -114,6 +163,7 @@ IB.toggleSidebar = function () {
 				$('.ib-container').removeClass('container-outline');
 				$('.blocks').removeClass('blocks-outline');
 				$('#page').css('margin-left', '0px');
+				$( ".ui-resizable-handle" ).hide();
 	    }
     });
     $('#sidebarbtn').toggle('slide', { direction: 'left' }, 500);   

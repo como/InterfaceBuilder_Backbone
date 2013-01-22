@@ -44,7 +44,8 @@ var Column = Backbone.Model.extend({
 
 var Block = Backbone.Model.extend({
 	defaults: {
-		'template':'text-block-template'
+		'template':'text-block-template',
+		'content':'Test Content'
 	},
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();

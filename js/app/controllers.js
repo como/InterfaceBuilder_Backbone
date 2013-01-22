@@ -1,7 +1,7 @@
 /**
 To do:
 // 1. Blocks
-2. UI
+// 2. UI
 3. Order Persistence
 4. Routing
 5. Offsets
@@ -119,6 +119,29 @@ IB.PageController = function(page) {
 			return block.get('uuid') == options.uuid;
 		}));
 				
+	}
+	
+	this.updateColspans = function(rowUUID, containerUUID, colspans)
+	{
+		var rowColumns = this.page.get('containers').find(function(container){
+			 return container.get('uuid') == containerUUID;
+		})
+		.get('rows')
+		.find(function(row){
+			return row.get('uuid') == rowUUID;
+		})
+		.get('columns');
+		
+		$.each(rowColumns.models, function(index, column){
+			
+			// $('#'.column.get('uuid')).removeClass (function (index, css) {
+			// 	    return (css.match (/\bspan\S+/g) || []).join(' ');
+			// 	}).addClass(colspans[index]);
+				
+			column.set('colspan', colspans[index].replace('span',''));
+			
+		});
+		
 	}
 
 }

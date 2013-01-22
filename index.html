@@ -67,6 +67,40 @@
 	
 	<!-- End block Templates -->
 	
+	<!-- Begin CSS Sandbox -->
+	<div id="css-sandbox">
+		<div id="css-sandbox-container" class="container">
+			<div id="css-sandbox-row" class="row">
+				<div id="css-sandbox-span1" class="span1">
+				</div>
+				<div id="css-sandbox-span2" class="span2">
+				</div>
+				<div id="css-sandbox-span3" class="span3">
+				</div>
+				<div id="css-sandbox-span4" class="span4">
+				</div>
+				<div id="css-sandbox-span5" class="span5">
+				</div>
+				<div id="css-sandbox-span6" class="span6">
+				</div>
+				<div id="css-sandbox-span7" class="span7">
+				</div>
+				<div id="css-sandbox-span8" class="span8">
+				</div>
+				<div id="css-sandbox-span9" class="span9">
+				</div>
+				<div id="css-sandbox-span10" class="span10">
+				</div>
+				<div id="css-sandbox-span11" class="span11">
+				</div>
+				<div id="css-sandbox-span12" class="span12">
+				</div>				
+			</div>
+		</div>
+		
+	</div>
+	<!-- End CSS Sandbox -->
+	
 	<!-- Begin Sidebar -->
 	<div id="sidebarbtn" onclick="IB.toggleSidebar()">
 		<a href="#"><i class="icon-th-list icon-white"></i></a>
@@ -88,7 +122,9 @@
 			<li><a href="#"><div class="sidebar_row" data-template="row-template">Row</div></a>
 
 		  <li class="nav-header">Blocks</li>
+		  <li><a href="#"><div class="sidebar_block" data-template="text-block-template">Rich Text</div></a></li>			
 		  <li><a href="#"><div class="sidebar_block" data-template="video-block-template">Video</div></a></li>			
+		  <li><a href="#"><div class="sidebar_block" data-template="table-block-template">Table</div></a></li>			
 		</ul>
 	</div>
 	<!-- End Sidebar -->
@@ -108,6 +144,7 @@
 	<script>
 
 	$(document).ready(function(){
+	IB.cssSandboxInstance = new IB.cssSandbox();
 	IB.currentPage = new Page({id:1});
 	IB.currentPage.fetch({
 		    success: function () {
