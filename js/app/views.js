@@ -62,10 +62,16 @@ var ContainerView = Backbone.View.extend({
 			id:row.get('uuid'),
 			containerUUID: this.model.get('uuid')
 		});
+		
 		this._rowViews.push(rv);
 		
     if (this._rendered) {
-      this.$('.rows').append(rv.render().el);
+			//console.log(this._rowViews[row.get('order')]);
+			// console.log($(this._rowViews[row.get('order')].el).before(rv.render().el));
+			// $(this._rowViews[row.get('order')].el).prepend('here');
+      //this.$('.rows').append(rv.render().el);
+			// $(this._rowViews[row.get('order')].el).prev().append(rv.render().el);
+			$(this._rowViews[row.get('order')].el).before(rv.render().el);
     }
 		
 	},
@@ -136,6 +142,7 @@ var RowView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
+		if(_.size(this.model.changed)==1 && this.model.changed.hasOwnProperty('order')) return this;
 		
     this._rendered = true;
  

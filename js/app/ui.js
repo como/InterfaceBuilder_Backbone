@@ -16,9 +16,7 @@ IB.cssSandbox = function (){
 	$.each($('#css-sandbox-'+IB.rowClass).children(), function(index, child){
 		that._columnWidths.push([$(child).attr('class'),$(child).width()]);
 	});
-	
-	console.log(this._columnWidths);
-	
+		
 	this.findColumnClassByWidth = function (width) {
 		var className = '';
 		$.each(this._columnWidths, function(index, record){
@@ -42,20 +40,27 @@ IB.cssSandbox = function (){
 }
 
 IB.droppableContainer = function(el){
+	var that = this;
 	el.children('.rows').droppable({
 			scope: "rows",
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
-			drop: function( event, ui ) {
-				IB.PageControllerInstance.addRow({containerUUID:$(this).data('uuid')});
-				ui.draggable.remove();
-				
+			drop: function( event, ui ) {				
+				ui.draggable.remove();				
 			}
 		}).sortable({
 			handle: ".row-handle",
 			connectWith: ".rows",
+			beforeStop: function( event, ui ) {
+				that.tmpOrder = ui.placeholder.index();
+			},
+			receive: function( event, ui ) {
+				// console.log(ui);
+				// console.log($(this).sortable('option','items'));				
+				IB.PageControllerInstance.addRow({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
+			},
 			update: function( event, ui ) {
-				//console.log('update');
+				// console.log($(this).sortable('toArray'));
 			}
 		});
 		//$( ".sidebar_row" ).draggable('options','connectToSortable','.rows');

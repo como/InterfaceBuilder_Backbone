@@ -53,10 +53,66 @@
 
 	</script>
 	
-	<script id="table-block-template" type="text/template">
+	<script id="video-block-template" type="text/template">
 	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
-		Table <%= content %>
+	<iframe width="560" height="315" src="http://www.youtube.com/embed/1T4XMNN4bNM" frameborder="0" allowfullscreen></iframe>
+
+	</script>
+	
+	<script id="news-block-template" type="text/template">
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	
+  <div class="block block-2">
+	<div class="portlet-content clearfix">
+      	<h2>News</h2>
+          <ul class="news wrap">
+            <li>
+              <img class="thumbnail pull-left" src="http://placehold.it/95x95" />
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            </li>
+            <li>
+              <img class="thumbnail pull-left" src="http://placehold.it/95x95" />
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            </li>
+            <li>
+              <img class="thumbnail pull-left" src="http://placehold.it/95x95" />
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            </li>
+            <li>
+              <img class="thumbnail pull-left" src="http://placehold.it/95x95" />
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            </li>
+          </ul>
+	</div>
+</div>
+
+		
+	</script>
+	
+	<script id="nav-block-template" type="text/template">
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	
+	<div class="navbar navbar-static-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <div class="row-fluid">
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#experiences">Experiences</a></li>
+                <li><a href="#foodwine">Food + Wine</a></li>
+                <li><a href="#foodwine">Visitor Information</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+                <li class="search visible-phone"><a href="#search" class="btn btn-search" data-toggle="collapse" data-target=".nav-collapse">Search</a></li>
+                <li class="wishlist"><a href="#wishlist" class="btn btn-primary">My Wishlist</a></li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+	</div>
+		
 	</script>
 	
 	<script id="video-block-template" type="text/template">
@@ -134,8 +190,11 @@
 	</div>
 	
 	<div id="sidebar">
+		<div class="pull-left">
+		<a id="newbtn" class="btn btn-inverse"><i class="icon-plus icon-white"></i></a>
+		<a id="savebtn" class="btn btn-inverse"><i class="icon-refresh icon-white"></i></a>
+		</div>
 		<div class="pull-right">
-		<a id="savebtn" class="btn btn-inverse">Save</i></a>
 		<a class="btn btn-inverse" onclick="IB.toggleSidebar()"><i class="icon-remove icon-white"></i></a>
 		</div>
 		<br/>
@@ -150,9 +209,10 @@
 			<li><a href="#"><div class="sidebar_row" data-template="row-template">Row</div></a>
 
 		  <li class="nav-header">Blocks</li>
+			<li><a href="#"><div class="sidebar_block" data-template="nav-block-template">Nav</div></a></li>	
 		  <li><a href="#"><div class="sidebar_block" data-template="text-block-template">Rich Text</div></a></li>			
-		  <li><a href="#"><div class="sidebar_block" data-template="video-block-template">Video</div></a></li>			
-		  <li><a href="#"><div class="sidebar_block" data-template="table-block-template">Table</div></a></li>			
+			<li><a href="#"><div class="sidebar_block" data-template="video-block-template">Video</div></a></li>
+		  <li><a href="#"><div class="sidebar_block" data-template="news-block-template">News</div></a></li>			
 		</ul>
 	</div>
 	<!-- End Sidebar -->
