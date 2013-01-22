@@ -29,7 +29,7 @@
 	
 	<script id="row-template" type="text/template">
 	Row <%= content %>
-	<a href="#" onclick="PageController.removeRow({containerUUID: '<%= options.containerUUID %>',uuid:'<%= uuid %>'})">x</a>
+	<a href="#" onclick="PageController.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})">x</a>
 	<div class="columns">
 	</div>
 	</script>
@@ -45,15 +45,16 @@
 	<!-- Start block Templates -->
 	
 	<script id="text-block-template" type="text/template">
-	Rich Text <%= content %>
+	Rich Text <%= content %> <a href="#" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})">x</a>
+
 	</script>
 	
 	<script id="table-block-template" type="text/template">
-	Table <%= content %>
+	Table <%= content %> <a href="#" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})">x</a>
 	</script>
 	
 	<script id="video-block-template" type="text/template">
-	Video <%= content %>
+	Video <%= content %> <a href="#" onclick="PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})">x</a>
 	</script>
 	
 	<!-- End block Templates -->

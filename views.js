@@ -50,7 +50,11 @@ var ContainerView = Backbone.View.extend({
     this.model.get('rows').bind('remove', this.removeRow);
 	},
 	addRow: function(row){
-		var rv = new RowView({model:row, containerUUID: this.model.get('uuid')});
+		var rv = new RowView({
+			model:row, 
+			id:row.get('uuid'),
+			containerUUID: this.model.get('uuid')
+		});
 		this._rowViews.push(rv);
 		
     if (this._rendered) {
@@ -161,7 +165,7 @@ var ColumnView = Backbone.View.extend({
 			model:block, 
 			id: block.get('uuid'), 
 			columnUUID: this.model.get('uuid'), 
-			rowUUID: this.options.containerUUID, 
+			rowUUID: this.options.rowUUID, 
 			containerUUID: this.options.containerUUID
 		});
 		
@@ -204,6 +208,7 @@ var BlockView = Backbone.View.extend({
 	tagName: 'div',
 	initialize: function(){
 		_(this).bindAll('update');
+		console.log(this);
 		this.model.bind('change', this.update);
 		this.template = '#'+this.model.get('template');
 	},
@@ -211,7 +216,13 @@ var BlockView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
-		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid')}));
+		this.$el.html(_.template($(this.template).html(), {
+			uuid: this.model.get('uuid'), 
+			columnUUID: this.options.columnUUID, 
+			rowUUID: this.options.rowUUID,
+			containerUUID: this.options.containerUUID,
+			content: this.model.get('uuid')
+		}));
 		return this;
 	}	
 });

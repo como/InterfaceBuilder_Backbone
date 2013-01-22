@@ -96,5 +96,25 @@ IB.PageController = function(page) {
 		console.log(columnBlocks);
 		
 	}
+	
+	this.removeBlock = function(options){
+		var columnBlocks = this.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
+		})
+		.get('rows')
+		.find(function(row){
+			return row.get('uuid') == options.rowUUID;
+		})
+		.get('columns')
+		.find(function(column){
+			return column.get('uuid') == options.columnUUID;
+		})
+		.get('blocks');
+		
+		columnBlocks.remove(columnBlocks.find(function(block){
+			return block.get('uuid') == options.uuid;
+		}));
+				
+	}
 
 }
