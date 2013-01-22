@@ -2,10 +2,9 @@
 To do:
 // 1. Blocks
 // 2. UI
-3. Order Persistence
-4. Routing
-5. Offsets
-6. Full persistence
+3. Routing
+4. Offsets
+5. Full persistence
 */
 
 var IB = IB || {};
@@ -19,6 +18,7 @@ IB.PageController = function(page) {
 	
 	this.addContainer = function(options){		
 		this.page.get('containers').add(new Container(options));
+		IB.setState('editing');
 	}
 	this.removeContainer = function(options){
 
@@ -27,12 +27,13 @@ IB.PageController = function(page) {
 		});	
 		
 		this.page.get('containers').remove(container);
-		
+		IB.setState('editing');
 	}
 	this.addRow = function(options){
 		this.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		}).get('rows').add(new Row({}));
+		IB.setState('editing');
 	}
 	this.removeRow = function(options){
 
@@ -44,6 +45,7 @@ IB.PageController = function(page) {
 		containerRows.remove(containerRows.find(function(row){
 				return row.get('uuid') == options.uuid;
 			}));		
+			IB.setState('editing');
 		
 	}
 	this.addColumn = function(options){
@@ -78,6 +80,7 @@ IB.PageController = function(page) {
 		});
 		
 		rowColumns.add(new Column({colspan:colspan}));
+		IB.setState('editing');
 
 	}
 	
@@ -97,7 +100,8 @@ IB.PageController = function(page) {
 		.get('blocks')
 		.add(new Block({template: options.template}));
 		
-		console.log(columnBlocks);
+		IB.setState('editing');
+		
 		
 	}
 	
@@ -118,7 +122,7 @@ IB.PageController = function(page) {
 		columnBlocks.remove(columnBlocks.find(function(block){
 			return block.get('uuid') == options.uuid;
 		}));
-				
+		IB.setState('editing');
 	}
 	
 	this.updateColspan = function(options)
@@ -135,6 +139,7 @@ IB.PageController = function(page) {
 			return column.get('uuid') == options.columnUUID;
 		})
 		.set('colspan', options.colspan.replace('span',''));
+		IB.setState('editing');
 		
 	}
 

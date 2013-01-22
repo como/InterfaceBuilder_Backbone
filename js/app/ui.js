@@ -2,6 +2,8 @@
 Todo:
 
 1. Implement fluid layout resizing
+2. Moving
+3. Sorting
 
 */
 var IB = IB || {};
@@ -99,6 +101,7 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 IB.initUI = function(){
 	
 	$('.handle').hide();
+	$('.blocks').removeClass('blocks-outline');
 	$('.ib-column').removeClass('column-outline');
 	$( ".ui-resizable-handle" ).hide();
 	
@@ -141,10 +144,21 @@ IB.initUI = function(){
 			//	console.log('update');
 			}
 		});
-		
 			
-			
-			//IB.toggleSidebar();
+		$('#savebtn').click(function(){
+			IB.PageControllerInstance.page.save();
+			IB.setState('saved');
+		});
+}
+
+IB.setState = function(state){
+	switch(state){
+		case 'editing':
+			$('#savebtn').removeClass('btn-inverse').addClass('btn-primary');
+		break;
+		default:
+			$('#savebtn').removeClass('btn-primary').addClass('btn-inverse');
+	}
 }
 
 IB.toggleSidebar = function () {
