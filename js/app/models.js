@@ -15,9 +15,15 @@ var Page = Backbone.Model.extend({
 var Container = Backbone.Model.extend({
 	initialize: function(attrs){
 		uuid = attrs.uuid || UUID.generate();
+		order   = attrs.order || 0;
 		rows = attrs.rows || {};
 		this.set('uuid', uuid);
+		this.set('order', order);
 		this.set('rows', new Rows(rows));
+	},
+	pushDown: function(){
+		var currentOrder = this.get('order');
+		this.set('order', currentOrder+1);
 	}
 });
 
@@ -62,7 +68,22 @@ var Block = Backbone.Model.extend({
 
 // Collections
 
-var Containers = Backbone.Collection.extend({model: Container});
+var Containers = Backbone.Collection.extend({
+	model: Container,
+	makePlace: function(position){
+		console.log('forcing', position);
+		$.each(this.models, function(index,model){
+			if(model.get('order') >= position) 
+			{
+				model.pushDown();
+			}
+		});
+		return this;
+	},
+  comparator: function( container ) {
+       return container.get('order');
+   }
+});
 var Rows = Backbone.Collection.extend({
 	model: Row,
 	makePlace: function(position){

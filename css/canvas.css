@@ -13,6 +13,8 @@ body {
 }
 
 #page {
+	width: 100%;
+	min-height:900px;
 }
 
 #sidebar_scaffolds, #sidebar_blocks {

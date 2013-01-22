@@ -22,7 +22,8 @@ var PageView = Backbone.View.extend({
 		this._containerViews.push(cv);
 		
     if (this._rendered) {
-      $(this.el).append(cv.render().el);
+			if(this._containerViews.length>0) $(this._containerViews[container.get('order')].el).before(cv.render().el);
+			else $(this.el).append(cv.render().el);			
     }
 	},
 	removeContainer: function(container){
@@ -66,11 +67,6 @@ var ContainerView = Backbone.View.extend({
 		this._rowViews.push(rv);
 		
     if (this._rendered) {
-			//console.log(this._rowViews[row.get('order')]);
-			// console.log($(this._rowViews[row.get('order')].el).before(rv.render().el));
-			// $(this._rowViews[row.get('order')].el).prepend('here');
-      //this.$('.rows').append(rv.render().el);
-			// $(this._rowViews[row.get('order')].el).prev().append(rv.render().el);
 			$(this._rowViews[row.get('order')].el).before(rv.render().el);
     }
 		

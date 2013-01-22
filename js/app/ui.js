@@ -54,9 +54,7 @@ IB.droppableContainer = function(el){
 			beforeStop: function( event, ui ) {
 				that.tmpOrder = ui.placeholder.index();
 			},
-			receive: function( event, ui ) {
-				// console.log(ui);
-				// console.log($(this).sortable('option','items'));				
+			receive: function( event, ui ) {		
 				IB.PageControllerInstance.addRow({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
 			},
 			update: function( event, ui ) {
@@ -134,19 +132,27 @@ IB.initUI = function(){
 	    revert: "invalid",
 			cursorAt: { top: 0, left: 0 }
 	});
-		
+	
+	var that = this;
+	
 	$("#page").droppable({
 			scope: "containers",
 			activeClass: "ui-state-hover",
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
-				IB.PageControllerInstance.addContainer({});
+				
 				ui.draggable.remove();
 			}
 		}).sortable({
 			handle: ".container-handle",
+			beforeStop: function( event, ui ) {
+				that.tmpOrder = ui.placeholder.index();
+			},
+			receive: function( event, ui ) {		
+				IB.PageControllerInstance.addContainer({order:that.tmpOrder});
+			},
 			update: function( event, ui ) {
-			//	console.log('update');
+				// console.log($(this).sortable('toArray'));
 			}
 		});
 			
