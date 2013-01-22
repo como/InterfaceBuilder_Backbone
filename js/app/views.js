@@ -247,6 +247,7 @@ var BlockView = Backbone.View.extend({
 		this.render();
 	},
 	render: function(){
+		console.log(this.model.get('content'));
 		this.$el.html(_.template($(this.template).html(), {
 			uuid: this.model.get('uuid'), 
 			columnUUID: this.options.columnUUID, 

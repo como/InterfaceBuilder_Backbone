@@ -16,6 +16,23 @@ $app->register(new Silex\Provider\SessionServiceProvider());
 //     }
 // });
 
+// Block persistence
+$app->get('/block/{id}', function (Request $request) use ($app)  {
+  return new Response($app['session']->get($request->get('id')), 201);
+});
+
+$app->post('/block', function (Request $request) use ($app)  {
+	$data = json_decode($request->getContent(), true);
+	$app['session']->set($data['id'], $request->getContent());
+  return new Response('Saved', 201);
+});
+
+$app->put('/block/{id}', function (Request $request) use ($app)  {
+	$app['session']->set($request->get('id'), $request->getContent());
+  return new Response('Saved', 201);
+});
+
+// Page persistence
 $app->get('/page/{id}', function (Request $request) use ($app)  {
   return new Response($app['session']->get('content'), 201);
 });

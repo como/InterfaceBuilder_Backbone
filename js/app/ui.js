@@ -168,6 +168,7 @@ IB.initUI = function(){
 			IB.PageControllerInstance.page.save();
 			IB.setState('saved');
 		});
+		
 }
 
 IB.setState = function(state){
@@ -205,4 +206,36 @@ IB.toggleSidebar = function () {
 	    }
     });
     $('#sidebarbtn').toggle('slide', { direction: 'left' }, 500);   
+}
+
+IB.editors = {
+	updateVideo: function(options){
+		var input = $('input[data-model-uuid='+options.uuid+']').val();
+		
+		IB.PageControllerInstance.page.get('containers').find(function(container){
+					 return container.get('uuid') == options.containerUUID;
+				})
+				.get('rows')
+				.find(function(row){
+					return row.get('uuid') == options.rowUUID;
+				})
+				.get('columns')
+				.find(function(column){
+					return column.get('uuid') == options.columnUUID;
+				})
+				.get('blocks')
+				.find(function(block){
+							return block.get('uuid') == options.uuid;
+				})
+				.set('content', input);
+				
+		IB.setState('editing');
+		// $('input.video-url').each(function(){
+		// 	console.log(this);
+		// 	// var that = this;
+		// 	// $(this).focusout(function(){
+		// 	// 	console.log('saving '+$(that).data('model-uuid'));
+		// 	// });
+		// });
+	}
 }

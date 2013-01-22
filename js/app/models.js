@@ -57,7 +57,7 @@ var Column = Backbone.Model.extend({
 var Block = Backbone.Model.extend({
 	defaults: {
 		'template':'text-block-template',
-		'content':'Test Content'
+		'content':'http://www.youtube.com/embed/1T4XMNN4bNM'
 	},
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();
@@ -108,6 +108,7 @@ var Rows = Backbone.Collection.extend({
 });
 var Columns = Backbone.Collection.extend({model: Column});
 var Blocks = Backbone.Collection.extend({
+	urlRoot : '/server/index.php/block',
 	model: Block,
 	makePlace: function(position){
 		console.log('forcing', position);
