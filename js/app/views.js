@@ -65,7 +65,7 @@ var ContainerView = Backbone.View.extend({
 		this._rowViews.push(rv);
 		
     if (this._rendered) {
-      $(this.el).append(rv.render().el);
+      this.$('.rows').append(rv.render().el);
     }
 		
 	},
@@ -87,7 +87,7 @@ var ContainerView = Backbone.View.extend({
  
     _(this._rowViews).each(function(rv) {		
      that.$('.rows').append(rv.render().el);
-    });
+    });		
  
     return this;	
 	},
@@ -95,6 +95,9 @@ var ContainerView = Backbone.View.extend({
 		if(this.compiled) return;
 		
 		this.$el.html(_.template($('#container-template').html(), {uuid: this.model.get('uuid')}));
+		
+		IB.droppableContainer(this.$el);
+		
 		this.compiled = true;
 	}
 });
@@ -120,7 +123,7 @@ var RowView = Backbone.View.extend({
 		});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
-      $(this.el).append(cmv.render().el);
+      this.$('.columns').append(cmv.render().el);
     }		
 	},
 	removeColumn: function(column){
@@ -140,14 +143,20 @@ var RowView = Backbone.View.extend({
 		
 		var that = this;
 		
-		this.$el.html(_.template($('#row-template').html(), {uuid: this.model.get('uuid'), content:this.model.get('uuid'), options:this.options}));
-		
+		this.compile();
+				
     _(this._columnViews).each(function(cmv) {
       that.$('.columns').append(cmv.render().el);
-    });
-		
+    });	
 		
 		return this;
+	},
+	compile: function(){
+		if(this.compiled) return;
+		
+		this.$el.html(_.template($('#row-template').html(), {uuid: this.model.get('uuid'), content:this.model.get('uuid'), options:this.options}));		
+		
+		this.compiled = true;
 	}
 });
 
@@ -166,7 +175,6 @@ var ColumnView = Backbone.View.extend({
 		'dblclick': 'addOne',
 	},
 	addBlock: function(block){
-		
 		var bv = new BlockView({
 			model:block, 
 			id: block.get('uuid'), 
@@ -177,7 +185,7 @@ var ColumnView = Backbone.View.extend({
 		
 		this._blockViews.push(bv);		
     if (this._rendered) {
-      $(this.el).append(bv.render().el);
+      this.$('.blocks').append(bv.render().el);
     }
 	},
 	removeBlock: function(block){
@@ -192,21 +200,29 @@ var ColumnView = Backbone.View.extend({
 	update: function(){
 		this.render();
 	},
-	render: function(){		
-		
+	render: function(){				
     this._rendered = true;
  
     $(this.el).empty();
 		
 		var that = this;
 		
-		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid'), uuid: this.model.get('uuid'), options:this.options}));
+		this.compile();
 		
     _(this._blockViews).each(function(cmv) {
+			
       that.$('.blocks').append(cmv.render().el);
     });
 		
 		return this;
+	},
+	compile: function(){
+		if(this.compiled) return;
+		
+		this.$el.html(_.template($(this.template).html(), {content: this.model.get('uuid'), uuid: this.model.get('uuid'), options:this.options}));
+		IB.droppableColumn(this.$el);
+		
+		this.compiled = true;
 	}
 });
 

@@ -8,8 +8,9 @@ body {
 }
 
 #page {
-	height: auto;
-	width: auto;
+	min-height: 500px;
+	min-width: 1200px;
+	background: #ccc;
 }
 
 #sidebar_scaffolds, #sidebar_blocks {
@@ -19,8 +20,12 @@ body {
 .container-outline {border: 0px dotted #666; min-height: 50px;}
 .row-outline {margin-top: 10px; margin-bottom: 10px; /*border-top: 4px solid #666;*/}
 .row-outline:hover {border: 0px dotted #4a9bff; /* border-top: 4px solid #4a9bff;*/}
-.column-outline {min-height: 30px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAKElEQVQIW2NkQANpaWn/GZHFQAKzZs1ihAvCBECKwILIAmBBdAGQIABhihI3cAJZSwAAAABJRU5ErkJggg==) repeat; }
+.column-outline {min-height: 50px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAKElEQVQIW2NkQANpaWn/GZHFQAKzZs1ihAvCBECKwILIAmBBdAGQIABhihI3cAJZSwAAAABJRU5ErkJggg==) repeat; }
 .column-outline:hover {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAALElEQVQIW2NkwAK8Zv//z4guDhLclsrIiCIBEwQphksgC8Il0AXBEtgEQRIAZYYW6jbeKcYAAAAASUVORK5CYII=) repeat; }
+
+.blocks {
+	border: 1px dotted #666;
+}
 
 .container-handle {
 	position: relative;

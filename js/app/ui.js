@@ -1,5 +1,49 @@
 var IB = IB || {};
 
+IB.droppableContainer = function(el){
+	el.children('.rows').droppable({
+			scope: "rows",
+			activeClass: "ui-state-hover",
+			hoverClass: "ui-state-active",
+			drop: function( event, ui ) {
+				IB.PageControllerInstance.addRow({containerUUID:$(this).data('uuid')});
+				ui.draggable.remove();
+				
+			}
+		}).sortable({
+			handle: ".row-handle",
+			connectWith: ".rows",
+			update: function( event, ui ) {
+				//console.log('update');
+			}
+		});
+		//$( ".sidebar_row" ).draggable('options','connectToSortable','.rows');
+}
+
+IB.droppableColumn = function(el){
+	el.children('.blocks').droppable({
+			scope: "blocks",
+			activeClass: "ui-state-hover",
+			hoverClass: "ui-state-active",
+			drop: function( event, ui ) {
+				IB.PageControllerInstance.addBlock({
+					columnUUID: $(this).data('uuid'), 
+					rowUUID:$(this).data('row'), 
+					containerUUID:$(this).data('container'),
+					template: $(ui.draggable).data('template')
+				});
+				ui.draggable.remove();
+			}
+		}).sortable({
+				handle: ".block-handle",
+				connectWith: ".blocks",
+				update: function( event, ui ) {
+					//console.log('update');
+				}
+			});
+		//$( ".sidebar_block" ).draggable('options','connectToSortable','.blocks');
+}
+
 IB.initUI = function(){
 
 	$('.handle').hide();
@@ -9,22 +53,25 @@ IB.initUI = function(){
 		scope: "containers",
 	    connectToSortable: "#page",
 	    helper: "clone",
-	    revert: "invalid"
+	    revert: "invalid",
+			cursorAt: { top: 0, left: 0 }
 	});
 
 	
 	$( ".sidebar_row" ).draggable({
 		scope: "rows",
-	    connectToSortable: ".ib-container",
+	    connectToSortable: ".rows",
 	    helper: "clone",
-	    revert: "invalid"
+	    revert: "invalid",
+			cursorAt: { top: 0, left: 0 }
 	});
 		
 	$( ".sidebar_block" ).draggable({
 		scope: "blocks",
-	    connectToSortable: ".ib-column",
+	    connectToSortable: ".blocks",
 	    helper: "clone",
-	    revert: "invalid"
+	    revert: "invalid",
+			cursorAt: { top: 0, left: 0 }
 	});
 		
 	$("#page").droppable({
@@ -37,49 +84,12 @@ IB.initUI = function(){
 			}
 		}).sortable({
 			handle: ".container-handle",
-			connectWith: "#page",
 			update: function( event, ui ) {
 			//	console.log('update');
 			}
 		});
 		
-	$(".ib-container").droppable({
-			scope: "rows",
-			activeClass: "ui-state-hover",
-			hoverClass: "ui-state-active",
-			drop: function( event, ui ) {
-				IB.PageControllerInstance.addRow({containerUUID:$(this).children('.rows').data('uuid')});
-				ui.draggable.remove();
-				
-			}
-		}).sortable({
-			handle: ".row-handle",
-			connectWith: ".ib-container",
-			update: function( event, ui ) {
-				//console.log('update');
-			}
-		});		
 			
-	$(".ib-column").droppable({
-			scope: "blocks",
-			activeClass: "ui-state-hover",
-			hoverClass: "ui-state-active",
-			drop: function( event, ui ) {
-				IB.PageControllerInstance.addBlock({
-					columnUUID: $(this).children('.blocks').data('uuid'), 
-					rowUUID:$(this).children('.blocks').data('row'), 
-					containerUUID:$(this).children('.blocks').data('container'),
-					template: $(ui.draggable).data('template')
-				});
-				ui.draggable.remove();
-			}
-		}).sortable({
-			handle: ".block-handle",
-			connectWith: ".ib-column",
-			update: function( event, ui ) {
-				//console.log('update');
-			}
-		});					
 			
 			//IB.toggleSidebar();
 }

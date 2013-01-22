@@ -21,7 +21,7 @@
 	
 	<script id="container-template" type="text/template">
 	<div class="row">
-		<div class="span12 handle container-handle "><a href="#" class="ib-control pull-right" onclick="App.PageController.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
+		<div class="span12 handle container-handle "><a href="#" class="ib-control pull-right" onclick="IB.PageControllerInstance.removeContainer({uuid: '<%= uuid %>'})"><span class="label label-inverse">container</span> <i class="icon-remove"></i></a></div>
 	</div>
 	<div class="rows" data-uuid="<%= uuid %>">
 	</div>
@@ -29,7 +29,7 @@
 	
 	<script id="row-template" type="text/template">
 	<div class="span12 handle row-handle">
-		<a href="#" class="ib-control pull-right" onclick="App.PageController.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
+		<a href="#" class="ib-control pull-right" onclick="IB.PageControllerInstance.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
 	</div>
 	<div class="columns" data-uuid="<%= uuid %>" data-container="<%= options.containerUUID %>">
 	</div>
@@ -47,20 +47,20 @@
 	<!-- Start block Templates -->
 	
 	<script id="text-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 	Rich Text <%= content %> 
 
 	</script>
 	
 	<script id="table-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 		Table <%= content %>
 	</script>
 	
 	<script id="video-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="App.PageController.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
 		Video <%= content %> 
 	</script>
