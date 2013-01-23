@@ -115,6 +115,7 @@ IB.initUI = function(){
 	$('.blocks').removeClass('blocks-outline');
 	$('.ib-column').removeClass('column-outline');
 	$( ".ui-resizable-handle" ).hide();
+	$( ".nav-controls" ).hide();
 	
 	$( ".sidebar_container" ).draggable({
 		scope: "containers",
@@ -169,8 +170,8 @@ IB.initUI = function(){
 			IB.setState('saved');
 		});
 		
+		$('<script src="vendor/bootstrap.min.js"></script>').appendTo('head');
 		$('<script src="vendor/ckeditor/ckeditor.js"></script>').appendTo('head');
-
 		
 }
 
@@ -195,6 +196,7 @@ IB.toggleSidebar = function () {
 				$('.ib-container').addClass('container-outline');
 				$('.blocks').addClass('blocks-outline');
 				// $('#page').css('margin-left', '200px');
+				$( ".nav-controls" ).show();
 				$( ".ui-resizable-handle" ).show();
 	    }
 	    else {
@@ -205,6 +207,7 @@ IB.toggleSidebar = function () {
 				$('.ib-container').removeClass('container-outline');
 				$('.blocks').removeClass('blocks-outline');
 				// $('#page').css('margin-left', '0px');
+				$( ".nav-controls" ).hide();
 				$( ".ui-resizable-handle" ).hide();
 	    }
     });

@@ -22,7 +22,7 @@ var PageView = Backbone.View.extend({
 		this._containerViews.push(cv);
 		
     if (this._rendered) {
-			if(this._containerViews.length>0) $(this._containerViews[container.get('order')].el).before(cv.render().el);
+			if(this._containerViews.length>1) $(this._containerViews[container.get('order')].el).before(cv.render().el);
 			else $(this.el).append(cv.render().el);			
     }
 	},
@@ -235,6 +235,8 @@ var ColumnView = Backbone.View.extend({
 	}
 });
 
+// Delegate block specific events to block editor services
+
 var BlockView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'ib-block',
@@ -243,6 +245,27 @@ var BlockView = Backbone.View.extend({
 		this.model.bind('change', this.update);
 		this.template = '#'+this.model.get('template');
 	},
+	events: {
+		'click .saveblock':'saveBlock',
+		'click #add-nav-item':'showForm',
+		'click #addNavItem':'addNavItem',
+		
+	},
+	showForm: function(){
+		$('.dropdown-menu').click(function(event){
+		     event.stopPropagation();
+		 });
+	},
+	saveBlock: function(){
+		this.model.save();
+	},
+	addNavItem: function(){
+		console.log('adding menu item');
+		var menu = this.model.get('content');
+		menu.items.push({name:$('#nav-item-name').val(),classAttr: $('#nav-item-class').val()});
+		this.model.set('content', menu);
+		this.update();
+	},	
 	update: function(){
 		this.render();
 	},
@@ -253,7 +276,7 @@ var BlockView = Backbone.View.extend({
 			rowUUID: this.options.rowUUID,
 			containerUUID: this.options.containerUUID,
 			content: this.model.get('content')
-		}));
+		}));		
 		return this;
 	}	
 });

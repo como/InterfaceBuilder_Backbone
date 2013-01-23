@@ -23,7 +23,7 @@ $app->get('/block/{id}', function (Request $request) use ($app)  {
 
 $app->post('/block', function (Request $request) use ($app)  {
 	$data = json_decode($request->getContent(), true);
-	$app['session']->set($data['id'], $request->getContent());
+	$app['session']->set($data['uuid'], $request->getContent());
   return new Response('Saved', 201);
 });
 

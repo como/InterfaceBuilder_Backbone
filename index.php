@@ -57,11 +57,11 @@
 	<script id="video-block-template" type="text/template">
 	<div class="handle block-handle">
 	<div class="input-append pull-left">
-	  <input class="span5" id="appendedInputButton" type="text" value="<%= content %>" data-model-uuid="<%= uuid %>">
+	  <input class="span5" id="appendedInputButton" type="text" value="<%= content.url %>" data-model-uuid="<%= uuid %>">
 	  <button class="btn" type="button" onclick="IB.editors.updateVideo({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})">Update</button>
 	</div>
 	<a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
-	<iframe width="560" height="315" src="<%= content %>" frameborder="0" allowfullscreen></iframe>
+	<iframe width="560" height="315" src="<%= content.url %>" frameborder="0" allowfullscreen></iframe>
 
 	</script>
 	
@@ -96,7 +96,15 @@
 	</script>
 	
 	<script id="nav-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="handle block-handle">
+	
+	<div class="pull-right">
+	<button class="btn btn-mini saveblock" type="button">Save</button>
+	<a href="#"  class="ib-control" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a>
+	</div>
+
+	
+	</div>
 	
 	<div class="navbar navbar-static-top">
         <div class="navbar-inner">
@@ -104,11 +112,25 @@
             <div class="row-fluid">
               <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#experiences">Experiences</a></li>
-                <li><a href="#foodwine">Food + Wine</a></li>
-                <li><a href="#foodwine">Visitor Information</a></li>
-                <li><a href="#events">Events</a></li>
-                <li><a href="#contact">Contact Us</a></li>
+								<% _.each(content.items, function(item) { %>
+	                <li><a href="#experiences"><%= item.name %></a></li>								
+									<% }); %>
+									<li>
+									<div class="btn-group nav-controls">
+										<a href="#" id="add-nav-item" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-plus"></i> New Page </a>
+										<a id="addNavItem"></a>
+									  <div id="nav-manager" class="dropdown-menu" style="padding: 15px;">
+											<input id="nav-item-name" class="input-medium" type="text" placeholder="Item Name"><br/>
+											<input id="nav-item-class" class="input-medium" type="text" placeholder="Item Class"  data-provide="typeahead" data-source='["active", "btn btn-primary"]'><br/>
+											<label class="checkbox inline">
+											  <input type="checkbox" id="inlineCheckbox1" value="option1" disabled="disabled" checked="checked"> Create Page
+											</label><br/>
+										
+											<a id="save-nav-item" href="#" class="btn btn-primary pull-right" onclick="javascript:$('#addNavItem').trigger('click')">Add</a>
+										
+									  </div>
+									</div>
+									</li>
                 <li class="search visible-phone"><a href="#search" class="btn btn-search" data-toggle="collapse" data-target=".nav-collapse">Search</a></li>
                 <li class="wishlist"><a href="#wishlist" class="btn btn-primary">My Wishlist</a></li>
               </ul>
@@ -117,14 +139,8 @@
           </div>
         </div>
 	</div>
-		
 	</script>
 	
-	<script id="video-block-template" type="text/template">
-	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
-	
-		Video <%= content %> 
-	</script>
 	
 	<!-- End block Templates -->
 	
@@ -229,7 +245,6 @@
 	<script src="vendor/jquery-ui-1.10.0.custom.min.js"></script>
 	<script src="vendor/underscore-min.js"></script>
 	<script src="vendor/backbone-min.js"></script>
-	<script src="vendor/bootstrap.min.js"></script>
 	<script src="js/app/ui.js"></script>
 	<script src="js/app/models.js"></script>
 	<script src="js/app/views.js"></script>

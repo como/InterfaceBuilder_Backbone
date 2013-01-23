@@ -55,15 +55,35 @@ var Column = Backbone.Model.extend({
 });
 
 var Block = Backbone.Model.extend({
+	urlRoot : '/server/index.php/block',
 	defaults: {
-		'template':'text-block-template',
-		'content':'http://www.youtube.com/embed/1T4XMNN4bNM'
+		'template':'text-block-template'
 	},
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();
 		order   = attrs.order || 0;
+		if(!attrs.content)
+		{
+			this.set('content', this.contentTypeDefault());
+		}
 		this.set('uuid', uuid);
 		this.set('order', order);
+	},
+	contentTypeDefault: function(){
+		switch(this.get('template')){
+			case 'nav-block-template':
+				return {items:[]};
+			break;
+			case 'video-block-template':
+				return {url:''};
+			break;
+			default:
+				return '';
+			break;
+		}
+	},
+	parse: function(response){
+		console.log(response);
 	},
 	pushDown: function(){
 		var currentOrder = this.get('order');
@@ -108,7 +128,6 @@ var Rows = Backbone.Collection.extend({
 });
 var Columns = Backbone.Collection.extend({model: Column});
 var Blocks = Backbone.Collection.extend({
-	urlRoot : '/server/index.php/block',
 	model: Block,
 	makePlace: function(position){
 		console.log('forcing', position);
