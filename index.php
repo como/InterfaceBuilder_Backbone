@@ -49,8 +49,8 @@
 	
 	<script id="text-block-template" type="text/template">
 	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
-	<div contentEditable="true">
-	Rich Text <%= content %> 
+	<div class="richText" contentEditable="true">
+	<%= content %> 
 	</div>
 	</script>
 	
@@ -99,7 +99,6 @@
 	<div class="handle block-handle">
 	
 	<div class="pull-right">
-	<button class="btn btn-mini saveblock" type="button">Save</button>
 	<a href="#"  class="ib-control" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a>
 	</div>
 
@@ -113,19 +112,16 @@
               <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
 								<% _.each(content.items, function(item) { %>
-	                <li><a href="#experiences"><%= item.name %></a></li>								
+	                <li><a class="<%= item.classAttr %>" href="<%= item.link %>"><%= item.name %></a></li>								
 									<% }); %>
 									<li>
 									<div class="btn-group nav-controls">
 										<a href="#" id="add-nav-item" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-plus"></i> New Page </a>
 										<a id="addNavItem"></a>
 									  <div id="nav-manager" class="dropdown-menu" style="padding: 15px;">
-											<input id="nav-item-name" class="input-medium" type="text" placeholder="Item Name"><br/>
-											<input id="nav-item-class" class="input-medium" type="text" placeholder="Item Class"  data-provide="typeahead" data-source='["active", "btn btn-primary"]'><br/>
-											<label class="checkbox inline">
-											  <input type="checkbox" id="inlineCheckbox1" value="option1" disabled="disabled" checked="checked"> Create Page
-											</label><br/>
-										
+											<input id="nav-item-name" class="input-medium" type="text" placeholder="Name"><br/>
+											<input id="nav-item-link" class="input-medium" type="text" placeholder="Link"  data-provide="typeahead" data-source='["/#/news", "/#/about"]'><br/>
+											<input id="nav-item-class" class="input-medium" type="text" placeholder="Item Class"  data-provide="typeahead" data-source='["active", "btn btn-primary"]'><br/>										
 											<a id="save-nav-item" href="#" class="btn btn-primary pull-right" onclick="javascript:$('#addNavItem').trigger('click')">Add</a>
 										
 									  </div>

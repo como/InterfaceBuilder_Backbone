@@ -55,7 +55,7 @@ var Column = Backbone.Model.extend({
 });
 
 var Block = Backbone.Model.extend({
-	urlRoot : '/server/index.php/block',
+	// urlRoot : '/server/index.php/block',
 	defaults: {
 		'template':'text-block-template'
 	},
@@ -68,6 +68,11 @@ var Block = Backbone.Model.extend({
 		}
 		this.set('uuid', uuid);
 		this.set('order', order);
+		// if(!this.isNew())
+		// {
+		// 	this.set('id', uuid);
+		// 	this.fetch();
+		// }
 	},
 	contentTypeDefault: function(){
 		switch(this.get('template')){

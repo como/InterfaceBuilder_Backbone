@@ -1,6 +1,7 @@
 /**
 1. Implement unbinding
 2. Test for Zombies
+3. Clean up container/row/block insertion logic
 */
 
 var IB = IB || {};
@@ -68,7 +69,16 @@ var ContainerView = Backbone.View.extend({
 		
     if (this._rendered) {
 			//Very week assertion : FIX THIS FOR ROW INSERTION CONISITENCY!!
-			$(this._rowViews[row.get('order')].el).before(rv.render().el);
+			var numRows = _.size(this.model.get('rows'));
+			if(this._rowViews.length>1 && row.get('order') < (numRows-1))
+			{
+				console.log('adding before');
+				$(this._rowViews[row.get('order')].el).before(rv.render().el);
+			}
+			else {
+				console.log('adding after');
+				this.$('.rows').append(rv.render().el);
+			}
     }
 		
 	},
@@ -236,6 +246,7 @@ var ColumnView = Backbone.View.extend({
 });
 
 // Delegate block specific events to block editor services
+// Fix contentEditables bindings
 
 var BlockView = Backbone.View.extend({
 	tagName: 'div',
@@ -246,25 +257,27 @@ var BlockView = Backbone.View.extend({
 		this.template = '#'+this.model.get('template');
 	},
 	events: {
-		'click .saveblock':'saveBlock',
-		'click #add-nav-item':'showForm',
+		'click #add-nav-item':'showEditForm',
 		'click #addNavItem':'addNavItem',
-		
+		'focusout .richText':'saveRichText'
 	},
-	showForm: function(){
+	saveRichText: function() {
+		this.model.set('content', this.$el.children('.richText').html());
+		IB.setState('editing');
+	},
+	showEditForm: function(){
 		$('.dropdown-menu').click(function(event){
 		     event.stopPropagation();
 		 });
 	},
-	saveBlock: function(){
-		this.model.save();
-	},
 	addNavItem: function(){
 		console.log('adding menu item');
 		var menu = this.model.get('content');
-		menu.items.push({name:$('#nav-item-name').val(),classAttr: $('#nav-item-class').val()});
+		menu.items.push({name:$('#nav-item-name').val(), link: $('#nav-item-link').val(), classAttr: $('#nav-item-class').val()});
 		this.model.set('content', menu);
+		// this.model.save();
 		this.update();
+		IB.setState('editing');
 	},	
 	update: function(){
 		this.render();
