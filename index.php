@@ -69,7 +69,7 @@
 	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	
   <div class="block block-2">
-	<div class="portlet-content clearfix" contentEditable="true">
+	<div class="portlet-content clearfix">
       	<h2>News</h2>
           <ul class="news wrap">
             <li>
@@ -90,7 +90,75 @@
             </li>
           </ul>
 	</div>
-</div>
+	</div>
+	</script>
+	
+	<script id="events-block-template" type="text/template">
+	<div class="handle block-handle"><a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
+	<div class="block block-3">
+    	<div class="portlet-content clearfix">
+        	<h2>Events</h2>
+            <div class="eventslider">
+            	<ul class="slides">
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Food + Wine</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Outdoor Adventure</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                   <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Operator</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Accommodation</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Tours</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Gallery</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                  <li>
+                    <img class="" src="http://placehold.it/220x326" />
+                    <div class="carousel-caption">
+                      <h4>Inspiration</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                      <button class="btn btn-more">More...</button>
+                    </div>
+                  </li>
+                </ul>
+        	</div>
+        </div>
 
 		
 	</script>
@@ -242,7 +310,8 @@
 			<li><a href="#"><div class="sidebar_block" data-template="nav-block-template">Nav</div></a></li>	
 		  <li><a href="#"><div class="sidebar_block" data-template="text-block-template">Rich Text</div></a></li>			
 			<li><a href="#"><div class="sidebar_block" data-template="video-block-template">Video</div></a></li>
-		  <li><a href="#"><div class="sidebar_block" data-template="news-block-template">News</div></a></li>			
+		  <li><a href="#"><div class="sidebar_block" data-template="news-block-template">News</div></a></li>	
+			<li><a href="#"><div class="sidebar_block" data-template="events-block-template">Events</div></a></li>		
 		</ul>
 	</div>
 	<!-- End Sidebar -->

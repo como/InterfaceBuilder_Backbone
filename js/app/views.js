@@ -276,11 +276,11 @@ var BlockView = Backbone.View.extend({
 		menu.items.push({name:$('#nav-item-name').val(), link: $('#nav-item-link').val(), classAttr: $('#nav-item-class').val()});
 		this.model.set('content', menu);
 		// this.model.save();
-		this.update();
+		this.render();
 		IB.setState('editing');
 	},	
 	update: function(){
-		this.render();
+		//this.render();
 	},
 	render: function(){
 		this.$el.html(_.template($(this.template).html(), {
