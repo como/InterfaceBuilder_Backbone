@@ -80,10 +80,10 @@ var Block = Backbone.Model.extend({
 				return {items:[]};
 			break;
 			case 'video-block-template':
-				return {url:''};
+				return {url:'http://www.youtube.com/embed/qpa0qKgCaRE'};
 			break;
 			default:
-				return '';
+				return 'Edit Me';
 			break;
 		}
 	},

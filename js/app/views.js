@@ -259,7 +259,12 @@ var BlockView = Backbone.View.extend({
 	events: {
 		'click #add-nav-item':'showEditForm',
 		'click #addNavItem':'addNavItem',
-		'focusout .richText':'saveRichText'
+		'focusout .richText':'saveRichText',
+		'click #updateVideoBtn':'updateVideo'
+	},
+	updateVideo: function(){
+		this.model.set('content', {url: $('#videoUrl').val()});
+		this.render();
 	},
 	saveRichText: function() {
 		this.model.set('content', this.$el.children('.richText').html());

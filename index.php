@@ -57,8 +57,8 @@
 	<script id="video-block-template" type="text/template">
 	<div class="handle block-handle">
 	<div class="input-append pull-left">
-	  <input class="span5" id="appendedInputButton" type="text" value="<%= content.url %>" data-model-uuid="<%= uuid %>">
-	  <button class="btn" type="button" onclick="IB.editors.updateVideo({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})">Update</button>
+	  <input id="videoUrl" class="span5" id="appendedInputButton" type="text" value="<%= content.url %>" data-model-uuid="<%= uuid %>">
+	  <button id="updateVideoBtn" class="btn" type="button" >Update</button>
 	</div>
 	<a href="#"  class="ib-control pull-right" onclick="IB.PageControllerInstance.removeBlock({uuid:'<%= uuid %>', columnUUID:'<%= columnUUID %>', rowUUID:'<%= rowUUID %>', containerUUID: '<%= containerUUID %>'})"><i class="icon-remove"></i></a></div>
 	<iframe width="560" height="315" src="<%= content.url %>" frameborder="0" allowfullscreen></iframe>
