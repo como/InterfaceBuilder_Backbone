@@ -168,6 +168,11 @@ IB.initUI = function(){
 		$('#savebtn').click(function(){
 			IB.PageControllerInstance.page.save();
 			IB.setState('saved');
+			$('#ib-messages').html('<div class="progress progress-striped active"><div class="bar" style="width: 90%;"></div></div>')
+			.fadeIn(500)
+			.delay(1000)
+			.append($('<div class="alert alert-success">Changes saved</div>').fadeIn(500))
+			.fadeOut(500);
 		});
 		
 		$('<script src="vendor/bootstrap.min.js"></script>').appendTo('head');
@@ -214,6 +219,20 @@ IB.toggleSidebar = function () {
     $('#sidebarbtn').toggle('slide', { direction: 'left' }, 500);   
 }
 
+IB.toggleNewPage = function () {
+		$('#edit-page-form').hide();
+    $('.newbtn').toggleClass('.btn-primary');
+		$('#new-page-form').toggle('fade', { direction: 'face' }, 500);
+		
+}
+
+IB.toggleEditPage = function () {
+		$('#new-page-form').hide();
+		$('.editbtn').toggleClass('.btn-primary');
+    $('#edit-page-form').toggle('fade', { direction: 'left' }, 500);   
+}
+
+
 IB.editors = {
 	updateVideo: function(options){
 		var input = $('input[data-model-uuid='+options.uuid+']').val();
@@ -233,7 +252,7 @@ IB.editors = {
 				.find(function(block){
 							return block.get('uuid') == options.uuid;
 				})
-				.set('content', input);
+				.set('content', {url: input});
 				
 		IB.setState('editing');
 		// $('input.video-url').each(function(){

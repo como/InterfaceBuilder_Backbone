@@ -122,8 +122,7 @@
 											<input id="nav-item-name" class="input-medium" type="text" placeholder="Name"><br/>
 											<input id="nav-item-link" class="input-medium" type="text" placeholder="Link"  data-provide="typeahead" data-source='["/#/news", "/#/about"]'><br/>
 											<input id="nav-item-class" class="input-medium" type="text" placeholder="Item Class"  data-provide="typeahead" data-source='["active", "btn btn-primary"]'><br/>										
-											<a id="save-nav-item" href="#" class="btn btn-primary pull-right" onclick="javascript:$('#addNavItem').trigger('click')">Add</a>
-										
+											<a id="save-nav-item" href="#" class="btn btn-primary pull-right" onclick="javascript:$('#addNavItem').trigger('click')">Add</a>		
 									  </div>
 									</div>
 									</li>
@@ -208,7 +207,8 @@
 	
 	<div id="sidebar">
 		<div class="pull-left">
-		<a id="newbtn" class="btn btn-inverse"><i class="icon-plus icon-white"></i></a>
+		<a id="newbtn" class="btn btn-inverse" onclick="IB.toggleNewPage()"><i class="icon-plus icon-white"></i></a>
+		<a id="editbtn" class="btn btn-inverse" onclick="IB.toggleEditPage()"><i class="icon-pencil icon-white"></i></a>
 		<a id="savebtn" class="btn btn-inverse"><i class="icon-refresh icon-white"></i></a>
 		</div>
 		<div class="pull-right">
@@ -216,11 +216,24 @@
 		</div>
 		<br/>
 		<br/>
-		<ul class="nav nav-list">
-			<li class="nav-header">Templates</li>
-			<li><a href="/#/page/1"><div class="draggable_scaffold" data-template="scaffold_col1row">Home Template</div></a></li>
-			<li><a href="#"><div class="draggable_scaffold" data-template="scaffold_col1row">About Template</div></a></li>
-			
+	  <div id="ib-messages">
+	  </div>
+	  <div id="new-page-form" style="padding: 15px; display:none">
+			<span class="label label-inverse">New Page</span>
+			<input id="nav-page-name" class="input-medium" type="text" placeholder="Name"><br/>
+			<input id="nav-page-title" class="input-medium" type="text" placeholder="Title"><br/>
+			<a id="save-new-page" href="#" class="btn btn-success" onclick="">Create</a>		
+			<a id="cancel-new-page" href="#" class="btn btn-danger" onclick="">Cancel</a>		
+	  </div>
+	  <div id="edit-page-form" style="padding: 15px; display:none">
+			<span class="label label-inverse">Edit Page</span>			
+			<input id="nav-page-name" class="input-medium" type="text" placeholder="Name"><br/>
+			<input id="nav-page-title" class="input-medium" type="text" placeholder="Title"><br/>
+			<a id="save-edit-page" href="#" class="btn btn-success" onclick="">Save</a>		
+			<a id="cancel-edit-page" href="#" class="btn btn-danger" onclick="">Cancel</a>
+	  </div>
+		<br/>		
+		<ul class="nav nav-list">			
 			<li class="nav-header">Scaffolding</li>
 			<li><a href="#"><div class="sidebar_container" data-template="container-template">Container</div></a></li>
 			<li><a href="#"><div class="sidebar_row" data-template="row-template">Row</div></a>

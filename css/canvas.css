@@ -17,6 +17,13 @@ body {
 	min-height:900px;
 }
 
+#ib-messages {
+	display: none;
+	min-height: 70px;
+	width: 180px;
+	padding: 10px;
+}
+
 #sidebar_scaffolds, #sidebar_blocks {
 	display: none;
 }
