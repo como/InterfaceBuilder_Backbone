@@ -58,7 +58,6 @@ IB.droppableContainer = function(el){
 				IB.PageControllerInstance.addRow({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
 			},
 			update: function( event, ui ) {
-				// console.log($(this).sortable('toArray'));
 			}
 		});
 		//$( ".sidebar_row" ).draggable('options','connectToSortable','.rows');

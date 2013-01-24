@@ -9,6 +9,79 @@ var IB = IB || {};
 IB.containerClass = 'container';
 IB.rowClass = 'row';
 
+// BaseViews
+IB.SortableCollectionView = Backbone.View.extend({
+	initialize: function(attrs){
+		console.log('building ' + attrs.collectionType);
+		this.subViews 					= [];		
+		this.collection					= attrs.collection;
+		this.subViewConstructor = attrs.subViewConstructor;
+		this.collectionSelector = attrs.collectionSelector;
+		this.template						= attrs.template;
+		this.collectionType			= attrs.collectionType;		
+		
+		_(this).bindAll('addView', 'removeView');		
+		this.collection.each(this.addView);		
+    this.collection.bind('add', this.addView);
+    this.collection.bind('remove', this.removeView);
+	},
+	addView: function(subviewModel){
+		var rv = new this.subViewConstructor({
+			model:subviewModel, 
+			id:subviewModel.get('uuid'),
+			parentUUID: this.model.get('uuid')
+		});
+		
+		this.subViews.push(rv.render());
+		
+		if(subviewModel.get('status') == 'new')
+		{			
+			this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
+			this.render();
+			this.collection.sort();
+		}	
+	},
+	removeView: function(subviewModel){
+	    var viewToRemove = _(this.subViews).select(function(subView) { return subView.model === subviewModel; })[0];
+	    this.subViews = _(this.subViews).without(viewToRemove);
+			$(viewToRemove.el).remove();		
+	},
+	render: function(){
+		var that = this;
+		this.compile();
+    _(this.subViews).each(function(rv) {	
+     that.$(that.collectionSelector).append(rv.el);
+    });		
+    return this;	
+	},
+	compile: function(){
+		if(this.compiled) return;
+		that = this;
+		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid')}));
+		this.$(this.collectionSelector).droppable({
+			scope: that.collectionType,
+			activeClass: "ui-state-hover",
+			hoverClass: "ui-state-active",
+			drop: function( event, ui ) {				
+				ui.draggable.remove();				
+			}
+		}).sortable({
+			handle: that.collectionSelector+"-handle",
+			connectWith: that.collectionSelector,
+			beforeStop: function( event, ui ) {
+				that.tmpOrder = ui.placeholder.index();
+			},
+			receive: function( event, ui ) {		
+				that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), order:that.tmpOrder, status:'new'})
+				// that.model.get('rows').add({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
+			},
+			update: function( event, ui ) {
+			}
+		});
+		this.compiled = true;
+	}
+});
+
 var PageView = Backbone.View.extend({
 	initialize: function(attrs){
 		_(this).bindAll('addContainer','removeContainer');
@@ -19,7 +92,17 @@ var PageView = Backbone.View.extend({
 		this.render();
 	},
 	addContainer: function(container){
-		var cv = new ContainerView({model:container, id:container.get('uuid')});
+		var cv = new ContainerView({			
+			model:container,
+			id:container.get('uuid'), 
+			collection:container.get('rows'),
+			collectionType: 'rows',
+			collectionSelector: '.rows',
+			subViewConstructor: RowView,
+			tagName: 'div',
+			className: 'ib-container ' + IB.containerClass,
+			template: '#container-template'
+		});
 		this._containerViews.push(cv);
 		
     if (this._rendered) {
@@ -43,74 +126,7 @@ var PageView = Backbone.View.extend({
 	}
 });
 
-var ContainerView = Backbone.View.extend({
-	tagName: 'div',
-	className: 'ib-container ' + IB.containerClass,
-	initialize: function(attrs){
-
-		this._rowViews = [];
-		
-		_(this).bindAll('addRow', 'removeRow');		
-		this.model.get('rows').each(this.addRow);		
-    this.model.get('rows').bind('add', this.addRow);
-    this.model.get('rows').bind('remove', this.removeRow);
-	},
-	addRow: function(row){
-		var rv = new RowView({
-			model:row, 
-			id:row.get('uuid'),
-			containerUUID: this.model.get('uuid')
-		});
-		
-		this._rowViews.push(rv);
-		
-    if (this._rendered) {
-			//Very week assertion : FIX THIS FOR ROW INSERTION CONISITENCY!!
-			var numRows = _.size(this.model.get('rows'));
-			if(this._rowViews.length>1 && row.get('order') < (numRows-1))
-			{
-				console.log('adding before');
-				$(this._rowViews[row.get('order')].el).before(rv.render().el);
-			}
-			else {
-				console.log('adding after');
-				this.$('.rows').append(rv.render().el);
-			}
-    }
-		
-	},
-	removeRow: function(row){
-		    var viewToRemove = _(this._rowViews).select(function(cv) { return cv.model === row; })[0];
-		    this._rowViews = _(this._rowViews).without(viewToRemove);
-		    if (this._rendered) $(viewToRemove.el).remove();		
-				// Unbind everything here.. 
-	},
-	render: function(){
-		
-    this._rendered = true;
- 
-    $(this.el).empty();
-		
-		var that = this;
-		
-		this.compile();
- 
-    _(this._rowViews).each(function(rv) {		
-     that.$('.rows').append(rv.render().el);
-    });		
- 
-    return this;	
-	},
-	compile: function(){
-		if(this.compiled) return;
-		
-		this.$el.html(_.template($('#container-template').html(), {uuid: this.model.get('uuid')}));
-		
-		IB.droppableContainer(this.$el);
-		
-		this.compiled = true;
-	}
-});
+var ContainerView = IB.SortableCollectionView.extend({});
 
 var RowView = Backbone.View.extend({
 	tagName: 'div',
@@ -128,7 +144,7 @@ var RowView = Backbone.View.extend({
 			model:column, 
 			id: column.get('uuid'),
 			rowUUID: this.model.get('uuid'), 
-			containerUUID: this.options.containerUUID, 
+			containerUUID: this.options.parentUUID, 
 			className:'ib-column column-outline span'+column.get('colspan')
 		});
 		this._columnViews.push(cmv);		

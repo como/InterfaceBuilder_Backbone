@@ -33,7 +33,7 @@ IB.PageController = function(page) {
 	this.addRow = function(options){
 		this.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
-		}).get('rows').makePlace(options.order).add(new Row({order:options.order})).sort();
+		}).get('rows').makePlace(options.order).add(new Row({order:options.order, status:'new'})).sort();
 		IB.setState('editing');
 	}
 	this.removeRow = function(options){

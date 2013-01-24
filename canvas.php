@@ -19,6 +19,8 @@
 <body>
 	
 	<!-- Start scaffolding Templates -->
+	<script id="page-template" type="text/template">
+	</script>
 	
 	<script id="container-template" type="text/template">
 	<div class="row">
@@ -30,9 +32,9 @@
 	
 	<script id="row-template" type="text/template">
 	<div class="span12 handle row-handle">
-		<a href="#" class="ib-control pull-right" onclick="IB.PageControllerInstance.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.containerUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
+		<a href="#" class="ib-control pull-right" onclick="IB.PageControllerInstance.removeRow({uuid:'<%= uuid %>', containerUUID: '<%= options.parentUUID %>'})"><span class="label label-inverse">row</span> <i class="icon-remove"></i></a>
 	</div>
-	<div class="columns" data-uuid="<%= uuid %>" data-container="<%= options.containerUUID %>">
+	<div class="columns" data-uuid="<%= uuid %>" data-container="<%= options.parentUUID %>">
 	</div>
 	</script>
 	
@@ -318,6 +320,7 @@
 
 	<div id="page">
 	</div>	
+	
 	<script src="vendor/uuid.core.js"></script>
 	<script src="vendor/jquery-1.9.0.js"></script>
 	<script src="vendor/jquery-ui-1.10.0.custom.min.js"></script>

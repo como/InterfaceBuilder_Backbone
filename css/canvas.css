@@ -6,6 +6,13 @@ body {
 	display: none;
 }
 
+.ui-state-active
+{
+	border: 0px;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAHElEQVQIW2Nc9v/KfwYcgBEkGcWow4hNftBJAgD26BuARzNJ4QAAAABJRU5ErkJggg==) repeat; 
+}
+
+
 .ui-state-hover
 {
 	border: 0px;
