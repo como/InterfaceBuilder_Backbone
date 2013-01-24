@@ -256,7 +256,7 @@ var ColumnView = Backbone.View.extend({
 		that = this;
 		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
 		this.$el.resizable({
-				containment: '#'+rowUUID,
+				containment: '#'+that.options.rowUUID,
 				minWidth: IB.cssSandboxInstance.getColspanDiff(),
 	      		grid: IB.cssSandboxInstance.getColspanDiff(),
 				resize: function( event, ui ) {
