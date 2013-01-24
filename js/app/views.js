@@ -253,16 +253,15 @@ var ColumnView = Backbone.View.extend({
 	},
 	compile: function(){
 		if(this.compiled) return;
-		
+		that = this;
 		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
-		
 		this.$el.resizable({
 				containment: '#'+rowUUID,
 				minWidth: IB.cssSandboxInstance.getColspanDiff(),
 	      		grid: IB.cssSandboxInstance.getColspanDiff(),
 				resize: function( event, ui ) {
-					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);				
-					IB.PageControllerInstance.updateColspan({columnUUID: el.attr('id'), rowUUID: rowUUID, containerUUID: containerUUID, colspan: activeColumnClass});
+					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);									
+					IB.PageControllerInstance.updateColspan({columnUUID: that.model.get('uuid'), rowUUID: that.options.rowUUID, containerUUID: that.options.containerUUID, colspan: activeColumnClass});
 				}
 	    });
 		
