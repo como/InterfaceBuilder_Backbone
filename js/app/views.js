@@ -66,7 +66,8 @@ IB.SortableCollectionView = Backbone.View.extend({
 				ui.draggable.remove();				
 			}
 		}).sortable({
-			handle: that.collectionSelector+"-handle",
+			// handle: that.collectionSelector+"-handle",
+			handle: ".row-handle",
 			connectWith: that.collectionSelector,
 			beforeStop: function( event, ui ) {
 				that.tmpOrder = ui.placeholder.index();
@@ -76,6 +77,7 @@ IB.SortableCollectionView = Backbone.View.extend({
 				// that.model.get('rows').add({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
 			},
 			update: function( event, ui ) {
+				that.collection.updateOrder($(this).sortable('toArray'));
 			}
 		});
 		this.compiled = true;

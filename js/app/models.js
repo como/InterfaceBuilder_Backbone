@@ -16,6 +16,7 @@ IB.Collection = Backbone.Collection.extend({
        return model.get('order');
    },
  	updateOrder: function(orderedList){
+		console.log('updating order');
  		_(this.models).each(function(model){
  			model.set('order', orderedList.indexOf(model.get('uuid')));
  		});
