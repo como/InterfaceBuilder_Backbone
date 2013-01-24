@@ -1,8 +1,37 @@
 var IB = IB || {};
 
+// Base Models and Collections
+IB.Collection = Backbone.Collection.extend({
+	makePlace: function(position){
+		console.log('forcing', position);
+		_(this.models).each(function(model){
+			if(model.get('order') >= position) 
+			{
+				model.pushDown();
+			}
+		});
+		return this;
+	},
+  comparator: function( model ) {
+       return model.get('order');
+   },
+ 	updateOrder: function(orderedList){
+ 		_(this.models).each(function(model){
+ 			model.set('order', orderedList.indexOf(model.get('uuid')));
+ 		});
+ 	}
+});
+
+IB.Model = Backbone.Model.extend({
+	pushDown: function(){
+		var currentOrder = this.get('order');
+		this.set('order', currentOrder+1);
+	}
+});
+
 // Models
 
-var Page = Backbone.Model.extend({
+var Page = IB.Model.extend({
 	initialize: function(){
 		this.set('containers', new Containers());
 	},
@@ -12,7 +41,7 @@ var Page = Backbone.Model.extend({
 	}
 });
 
-var Container = Backbone.Model.extend({
+var Container = IB.Model.extend({
 	initialize: function(attrs){
 		uuid = attrs.uuid || UUID.generate();
 		order   = attrs.order || 0;
@@ -20,14 +49,10 @@ var Container = Backbone.Model.extend({
 		this.set('uuid', uuid);
 		this.set('order', order);
 		this.set('rows', new Rows(rows));
-	},
-	pushDown: function(){
-		var currentOrder = this.get('order');
-		this.set('order', currentOrder+1);
 	}
 });
 
-var Row = Backbone.Model.extend({
+var Row = IB.Model.extend({
 	initialize: function(attrs){
 		uuid 		= attrs.uuid || UUID.generate();
 		order   = attrs.order || 0;
@@ -35,14 +60,10 @@ var Row = Backbone.Model.extend({
 		this.set('uuid', uuid);
 		this.set('order', order);
 		this.set('columns', new Columns(columns));
-	},
-	pushDown: function(){
-		var currentOrder = this.get('order');
-		this.set('order', currentOrder+1);
 	}
 });
 
-var Column = Backbone.Model.extend({
+var Column = IB.Model.extend({
 	defaults: {
 		'colspan': 12
 	},
@@ -54,8 +75,7 @@ var Column = Backbone.Model.extend({
 	}
 });
 
-var Block = Backbone.Model.extend({
-	// urlRoot : '/server/index.php/block',
+var Block = IB.Model.extend({
 	defaults: {
 		'template':'text-block-template'
 	},
@@ -68,11 +88,6 @@ var Block = Backbone.Model.extend({
 		}
 		this.set('uuid', uuid);
 		this.set('order', order);
-		// if(!this.isNew())
-		// {
-		// 	this.set('id', uuid);
-		// 	this.fetch();
-		// }
 	},
 	contentTypeDefault: function(){
 		switch(this.get('template')){
@@ -89,62 +104,22 @@ var Block = Backbone.Model.extend({
 	},
 	parse: function(response){
 		console.log(response);
-	},
-	pushDown: function(){
-		var currentOrder = this.get('order');
-		this.set('order', currentOrder+1);
 	}
 });
 
 
 // Collections
 
-var Containers = Backbone.Collection.extend({
-	model: Container,
-	makePlace: function(position){
-		console.log('forcing', position);
-		$.each(this.models, function(index,model){
-			if(model.get('order') >= position) 
-			{
-				model.pushDown();
-			}
-		});
-		return this;
-	},
-  comparator: function( container ) {
-       return container.get('order');
-   }
+var Containers =	IB.Collection.extend({
+	model: Container
 });
-var Rows = Backbone.Collection.extend({
-	model: Row,
-	makePlace: function(position){
-		console.log('forcing', position);
-		$.each(this.models, function(index,model){
-			if(model.get('order') >= position) 
-			{
-				model.pushDown();
-			}
-		});
-		return this;
-	},
-  comparator: function( row ) {
-       return row.get('order');
-   }
+
+var Rows = IB.Collection.extend({
+	model: Row
 });
+
 var Columns = Backbone.Collection.extend({model: Column});
-var Blocks = Backbone.Collection.extend({
-	model: Block,
-	makePlace: function(position){
-		console.log('forcing', position);
-		$.each(this.models, function(index,model){
-			if(model.get('order') >= position) 
-			{
-				model.pushDown();
-			}
-		});
-		return this;
-	},
-  comparator: function( block ) {
-       return block.get('order');
-   }
+
+var Blocks = IB.Collection.extend({
+	model: Block
 });

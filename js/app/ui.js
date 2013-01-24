@@ -71,8 +71,6 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 				minWidth: IB.cssSandboxInstance.getColspanDiff(),
 	      grid: IB.cssSandboxInstance.getColspanDiff(),
 				resize: function( event, ui ) {
-					// console.log(ui.size.width);
-					// console.log(IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width));
 					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);				
 					IB.PageControllerInstance.updateColspan({columnUUID: el.attr('id'), rowUUID: rowUUID, containerUUID: containerUUID, colspan: activeColumnClass});
 				}
@@ -103,7 +101,6 @@ IB.droppableColumn = function(el, rowUUID, containerUUID, colspan, resizable){
 					});
 				},
 				update: function( event, ui ) {
-					// console.log($(this).sortable('toArray'));
 				}
 			});
 		//$( ".sidebar_block" ).draggable('options','connectToSortable','.blocks');
@@ -232,7 +229,6 @@ IB.toggleEditPage = function () {
     $('#edit-page-form').toggle('fade', { direction: 'left' }, 500);   
 }
 
-
 IB.editors = {
 	updateVideo: function(options){
 		var input = $('input[data-model-uuid='+options.uuid+']').val();
@@ -255,12 +251,5 @@ IB.editors = {
 				.set('content', {url: input});
 				
 		IB.setState('editing');
-		// $('input.video-url').each(function(){
-		// 	console.log(this);
-		// 	// var that = this;
-		// 	// $(this).focusout(function(){
-		// 	// 	console.log('saving '+$(that).data('model-uuid'));
-		// 	// });
-		// });
 	}
 }

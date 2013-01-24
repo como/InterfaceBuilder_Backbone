@@ -35,11 +35,8 @@ var PageView = Backbone.View.extend({
 	},
 	render: function(){
     this._rendered = true;
- 
     $(this.el).empty();
-		
 		var that = this;
- 
     _(this._containerViews).each(function(cv) {
       that.$el.append(cv.render().el);
     });
