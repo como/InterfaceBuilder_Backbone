@@ -242,7 +242,7 @@ var ColumnView = Backbone.View.extend({
 		
 		this.compile();
 		
-		//IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
+		IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
 		
     _(this._blockViews).each(function(cmv) {
 			
@@ -253,45 +253,8 @@ var ColumnView = Backbone.View.extend({
 	},
 	compile: function(){
 		if(this.compiled) return;
-		that = this;
-		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
-		this.$el.resizable({
-				containment: '#'+that.options.rowUUID,
-				minWidth: IB.cssSandboxInstance.getColspanDiff(),
-	      		grid: IB.cssSandboxInstance.getColspanDiff(),
-				resize: function( event, ui ) {
-					activeColumnClass = IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width);									
-					IB.PageControllerInstance.updateColspan({columnUUID: that.model.get('uuid'), rowUUID: that.options.rowUUID, containerUUID: that.options.containerUUID, colspan: activeColumnClass});
-				}
-	    });
 		
-		this.$('.blocks').droppable({
-				scope: "blocks",
-				activeClass: "ui-state-hover",
-				hoverClass: "ui-state-active",
-				drop: function( event, ui ) {
-					ui.draggable.remove();
-				}
-			}).sortable({
-					handle: ".block-handle",
-					connectWith: ".blocks",
-					beforeStop: function( event, ui ) {
-						that.tmpOrder = ui.placeholder.index();
-					},
-					receive: function( event, ui ) {
-						IB.PageControllerInstance.addBlock({
-							columnUUID: $(this).data('uuid'), 
-							rowUUID:$(this).data('row'), 
-							containerUUID:$(this).data('container'),
-							template: $(ui.sender).data('template'),
-							order: that.tmpOrder
-						});
-					},
-					update: function( event, ui ) {
-						console.log('update from view');
-						that.collection.updateOrder($(this).sortable('toArray'));
-					}
-				});
+		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
 		
 		this.compiled = true;
 	}
