@@ -3,7 +3,7 @@ Todo:
 
 1. Implement fluid layout resizing
 2. Moving
-3. Sorting
+3. Sorting - Multiple containers
 
 */
 var IB = IB || {};

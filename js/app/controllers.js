@@ -30,7 +30,25 @@ IB.PageController = function(page) {
 		this.page.get('containers').remove(container);
 		IB.setState('editing');
 	}
+	// this.addRow = function(options){
+	// 	this.page.get('containers').find(function(container){
+	// 		 return container.get('uuid') == options.containerUUID;
+	// 	}).get('rows').makePlace(options.order).add(new Row({order:options.order, status:'new'})).sort();
+	// 	IB.setState('editing');
+	// }
+	this.removeRow = function(options){
 
+		var containerRows = this.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
+		}).get('rows');
+		
+		
+		containerRows.remove(containerRows.find(function(row){
+				return row.get('uuid') == options.uuid;
+			}));		
+			IB.setState('editing');
+		
+	}
 	this.addColumn = function(options){
 						
 		var rowColumns = this.page.get('containers').find(function(container){
@@ -67,8 +85,50 @@ IB.PageController = function(page) {
 
 	}
 	
-	this.moveBlock = function (move) {
+	// this.addBlock = function(options){
+	// 					
+	// 	var columnBlocks = this.page.get('containers').find(function(container){
+	// 		 return container.get('uuid') == options.containerUUID;
+	// 	})
+	// 	.get('rows')
+	// 	.find(function(row){
+	// 		return row.get('uuid') == options.rowUUID;
+	// 	})
+	// 	.get('columns')
+	// 	.find(function(column){
+	// 		return column.get('uuid') == options.columnUUID;
+	// 	})
+	// 	.get('blocks')
+	// 	.makePlace(options.order)
+	// 	.add(new Block({template: options.template, order: options.order}));
+	// 	
+	// 	IB.setState('editing');
+	// 	
+	// }
+	
+	this.removeBlock = function(options){
+		var columnBlocks = this.page.get('containers').find(function(container){
+			 return container.get('uuid') == options.containerUUID;
+		})
+		.get('rows')
+		.find(function(row){
+			return row.get('uuid') == options.rowUUID;
+		})
+		.get('columns')
+		.find(function(column){
+			return column.get('uuid') == options.columnUUID;
+		})
+		.get('blocks');
+		
+		columnBlocks.remove(columnBlocks.find(function(block){
+			return block.get('uuid') == options.uuid;
+		}));
 		IB.setState('editing');
+	}
+	
+
+	
+	this.moveBlock = function (move) {
 		console.log(move);
 	}
 
