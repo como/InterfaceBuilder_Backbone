@@ -112,7 +112,11 @@ var Block = IB.Model.extend({
 // Collections
 
 var Containers =	IB.Collection.extend({
-	model: Container
+	model: Container,
+	Containers: function(){
+		MyModel.__super__.initialize.apply(this, arguments);
+		this.updateOrder();
+	}
 });
 
 var Rows = IB.Collection.extend({

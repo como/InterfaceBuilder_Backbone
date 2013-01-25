@@ -24,6 +24,7 @@ IB.SortableCollectionView = Backbone.View.extend({
 		this.collection.each(this.addView);		
     this.collection.bind('add', this.addView);
     this.collection.bind('remove', this.removeView);
+		console.log(this.collection);
 	},
 	addView: function(subviewModel){
 		var rv = new this.subViewConstructor({
@@ -33,10 +34,10 @@ IB.SortableCollectionView = Backbone.View.extend({
 		});
 		
 		this.subViews.push(rv.render());
-		this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
 		
 		if(subviewModel.get('status') == 'new')
-		{						
+		{			
+			this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
 			this.render();
 			this.collection.sort();
 		}	
@@ -47,9 +48,11 @@ IB.SortableCollectionView = Backbone.View.extend({
 			$(viewToRemove.el).remove();		
 	},
 	render: function(){
+		
 		var that = this;
 		this.compile();
     _(this.subViews).each(function(rv) {	
+			console.log('rendering ' + rv.model.get('order'));
      that.$(that.collectionSelector).append(rv.el);
     });		
     return this;	
