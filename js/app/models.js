@@ -16,7 +16,6 @@ IB.Collection = Backbone.Collection.extend({
        return model.get('order');
    },
  	updateOrder: function(orderedList){
-		console.log('updating order');
  		_(this.models).each(function(model){
  			model.set('order', orderedList.indexOf(model.get('uuid')));
  		});
@@ -112,11 +111,7 @@ var Block = IB.Model.extend({
 // Collections
 
 var Containers =	IB.Collection.extend({
-	model: Container,
-	Containers: function(){
-		MyModel.__super__.initialize.apply(this, arguments);
-		this.updateOrder();
-	}
+	model: Container
 });
 
 var Rows = IB.Collection.extend({

@@ -24,7 +24,6 @@ IB.SortableCollectionView = Backbone.View.extend({
 		this.collection.each(this.addView);		
     this.collection.bind('add', this.addView);
     this.collection.bind('remove', this.removeView);
-		console.log(this.collection);
 	},
 	addView: function(subviewModel){
 		var rv = new this.subViewConstructor({
@@ -52,7 +51,6 @@ IB.SortableCollectionView = Backbone.View.extend({
 		var that = this;
 		this.compile();
     _(this.subViews).each(function(rv) {	
-			console.log('rendering ' + rv.model.get('order'));
      that.$(that.collectionSelector).append(rv.el);
     });		
     return this;	
@@ -245,7 +243,7 @@ var ColumnView = Backbone.View.extend({
 		
 		this.compile();
 		
-		IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
+		//IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
 		
     _(this._blockViews).each(function(cmv) {
 			
@@ -258,6 +256,44 @@ var ColumnView = Backbone.View.extend({
 		if(this.compiled) return;
 		
 		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
+		
+		var that = this;
+		
+		this.$el.resizable({
+				containment: '#'+that.options.rowUUID,
+				minWidth: IB.cssSandboxInstance.getColspanDiff(),
+	      grid: IB.cssSandboxInstance.getColspanDiff(),
+				resize: function( event, ui ) {			
+					that.model.set('colspan', IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width).replace('span',''));
+				}
+	    });
+			
+			this.$('.blocks').droppable({
+					scope: "blocks",
+					activeClass: "ui-state-hover",
+					hoverClass: "ui-state-active",
+					drop: function( event, ui ) {
+						ui.draggable.remove();
+					}
+				}).sortable({
+						handle: ".block-handle",
+						connectWith: ".blocks",
+						beforeStop: function( event, ui ) {
+							that.tmpOrder = ui.placeholder.index();
+						},
+						receive: function( event, ui ) {
+							IB.PageControllerInstance.addBlock({
+								columnUUID: $(this).data('uuid'), 
+								rowUUID:$(this).data('row'), 
+								containerUUID:$(this).data('container'),
+								template: $(ui.sender).data('template'),
+								order: that.tmpOrder
+							});
+						},
+						update: function( event, ui ) {
+							this.model.get('blocks').updateOrder($(this).sortable('toArray'));
+						}
+					});
 		
 		this.compiled = true;
 	}
