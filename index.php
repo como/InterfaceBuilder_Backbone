@@ -24,8 +24,8 @@
 
 </header>
 <section>
-	<div id="wrapper" style="width:1024px;height:768px;margin-top:20px;" data-device="tabletPortrait" class="">
-	<iframe id="canvas" src="canvas.php" onload="resbook.changeUrl(this.contentWindow.location,this.contentDocument.title);"></iframe>
+	<div id="wrapper" style="width:auto;height:auto;" data-device="tabletPortrait" class="">
+	<iframe id="canvas" src="canvas.php"></iframe>
 	<span class="keyboard-bg"></span>
 	</div>
 </section>

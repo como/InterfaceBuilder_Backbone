@@ -21,22 +21,6 @@ window.resbook = {};
             tabletLandscape: [768, 1024],
             auto: 'auto'
         }, refreshCss = function (disable) {
-            // var ifrm = d.querySelector('#wrapper iframe');
-            // ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
-            // var b = ifrm.document.querySelector('body');
-            // if (disable) {
-            //     var el = ifrm.document.getElementById('cssrefresh');
-            //     if (el) {
-            //         el.parentNode.removeChild(el);
-            //         b.classList.remove('cssrefresh')
-            //     }
-            // } else {
-            //     var t = ifrm.document.createTextNode("(function(){var script=document.createElement('script');script.setAttribute('src','http://responsive.victorcoulon.fr/assets/js/cssrefresh.js');script.setAttribute('id','cssrefresh');var head=document.getElementsByTagName('head');head[0].appendChild(script)})()"),
-            //         s = ifrm.document.createElement("script");
-            //     b.classList.add('cssrefresh');
-            //     s.appendChild(t);
-            //     ifrm.document.body.appendChild(s)
-            // }
         }, resize = function (w, h, f) {
             w = w || wrapper.clientWidth;
             h = h || wrapper.clientHeight;
