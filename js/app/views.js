@@ -12,7 +12,6 @@ IB.rowClass = 'row';
 // BaseViews
 IB.SortableCollectionView = Backbone.View.extend({
 	initialize: function(attrs){
-		console.log('building ' + attrs.collectionType);
 		this.subViews 					= [];		
 		this.collection					= attrs.collection;
 		this.subViewConstructor = attrs.subViewConstructor;
@@ -46,8 +45,7 @@ IB.SortableCollectionView = Backbone.View.extend({
 	    this.subViews = _(this.subViews).without(viewToRemove);
 			$(viewToRemove.el).remove();		
 	},
-	render: function(){
-		
+	render: function(){		
 		var that = this;
 		this.compile();
     _(this.subViews).each(function(rv) {	
@@ -143,12 +141,19 @@ var RowView = Backbone.View.extend({
     this.model.get('columns').bind('remove', this.removeColumn);		
 	},
 	addColumn: function(column){
+		// console.log(column);
 		var cmv = new ColumnView({
 			model:column, 
 			id: column.get('uuid'),
+			collection: column.get('blocks'),
 			rowUUID: this.model.get('uuid'), 
 			containerUUID: this.options.parentUUID, 
-			className:'ib-column column-outline span'+column.get('colspan')
+			className:'ib-column column-outline span'+column.get('colspan'),
+			collectionType: 'blocks',
+			collectionSelector: '.blocks',
+			subViewConstructor: BlockView,
+			tagName: 'div',
+			template: '#column-template'
 		});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
@@ -191,74 +196,34 @@ var RowView = Backbone.View.extend({
 	}
 });
 
-var ColumnView = Backbone.View.extend({
-	tagName: 'div',
-	initialize: function(){
-		this._blockViews = [];
-		this.template = '#column-template';
-		_(this).bindAll('update','addBlock','removeBlock');
-		this.model.bind('change', this.update);
-		this.model.get('blocks').each(this.addBlock);		
-    this.model.get('blocks').bind('add', this.addBlock);
-    this.model.get('blocks').bind('remove', this.removeBlock);		
-	},
+var ColumnView = IB.SortableCollectionView.extend({
 	events: {
 		'dblclick .handle': 'addOne',
 	},
-	addBlock: function(block){
-		var bv = new BlockView({
-			model:block, 
-			id: block.get('uuid'), 
-			columnUUID: this.model.get('uuid'), 
+	addView: function(subviewModel){
+		var bv = new this.subViewConstructor({
+			model:subviewModel, 
+			id: subviewModel.get('uuid'), 
+			parentUUID: this.model.get('uuid'), 
 			rowUUID: this.options.rowUUID, 
 			containerUUID: this.options.containerUUID
-		});
-		
-		var numBlocks = _.size(this.model.get('blocks'));
-		
-		this._blockViews.push(bv);		
-    if (this._rendered) {
-			if(numBlocks > 0 && block.get('order') < (numBlocks-1)) $(this._blockViews[block.get('order')].el).before(bv.render().el);
-			else this.$('.blocks').append(bv.render().el);
-    }
-	},
-	removeBlock: function(block){
-    var viewToRemove = _(this._blockViews).select(function(bv) { return bv.model === block; })[0];
-    this._blockViews = _(this._blockViews).without(viewToRemove);
-    if (this._rendered) $(viewToRemove.el).remove();		
-		// Unbind everything here.. 
+		});	
+		this.subViews.push(bv.render());		
+			
+		if(subviewModel.get('status') == 'new')
+		{			
+			this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
+			this.render();
+			this.collection.sort();
+		}	
 	},
 	addOne: function(){
 		IB.PageControllerInstance.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
 	},
-	update: function(){
-		//this.render();
-	},
-	render: function(){				
-    this._rendered = true;
- 
-    $(this.el).empty();
-		
-		var that = this;
-		
-		this.compile();
-		
-		//IB.droppableColumn(this.$el, this.options.rowUUID, this.options.containerUUID, this.model.get('colspan'), true);
-		
-    _(this._blockViews).each(function(cmv) {
-			
-      that.$('.blocks').append(cmv.render().el);
-    });
-		
-		return this;
-	},
 	compile: function(){
 		if(this.compiled) return;
-		
 		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
-		
-		var that = this;
-		
+		var that = this;		
 		this.$el.resizable({
 				containment: '#'+that.options.rowUUID,
 				minWidth: IB.cssSandboxInstance.getColspanDiff(),
@@ -282,16 +247,11 @@ var ColumnView = Backbone.View.extend({
 							that.tmpOrder = ui.placeholder.index();
 						},
 						receive: function( event, ui ) {
-							IB.PageControllerInstance.addBlock({
-								columnUUID: $(this).data('uuid'), 
-								rowUUID:$(this).data('row'), 
-								containerUUID:$(this).data('container'),
-								template: $(ui.sender).data('template'),
-								order: that.tmpOrder
-							});
+							that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), order:that.tmpOrder, status:'new', rowUUID:$(this).data('row'), containerUUID:$(this).data('container'), template: $(ui.sender).data('template')});
+							
 						},
 						update: function( event, ui ) {
-							this.model.get('blocks').updateOrder($(this).sortable('toArray'));
+							that.collection.updateOrder($(this).sortable('toArray'));
 						}
 					});
 		
@@ -344,7 +304,7 @@ var BlockView = Backbone.View.extend({
 	render: function(){
 		this.$el.html(_.template($(this.template).html(), {
 			uuid: this.model.get('uuid'), 
-			columnUUID: this.options.columnUUID, 
+			columnUUID: this.options.parentUUID, 
 			rowUUID: this.options.rowUUID,
 			containerUUID: this.options.containerUUID,
 			content: this.model.get('content')
