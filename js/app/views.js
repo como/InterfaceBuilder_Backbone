@@ -72,10 +72,12 @@ IB.SortableCollectionView = Backbone.View.extend({
 				that.tmpOrder = ui.placeholder.index();
 			},
 			receive: function( event, ui ) {		
+				IB.setState('editing');
 				that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), order:that.tmpOrder, status:'new'})
 				// that.model.get('rows').add({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
 			},
 			update: function( event, ui ) {
+				IB.setState('editing');
 				that.collection.updateOrder($(this).sortable('toArray'));
 			}
 		});
@@ -247,10 +249,35 @@ var ColumnView = IB.SortableCollectionView.extend({
 							that.tmpOrder = ui.placeholder.index();
 						},
 						receive: function( event, ui ) {
-							that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), order:that.tmpOrder, status:'new', rowUUID:$(this).data('row'), containerUUID:$(this).data('container'), template: $(ui.sender).data('template')});
+							IB.setState('editing');
+							if(ui.sender.hasClass('sidebar_block'))
+							{
+								that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), rowUUID:$(this).data('row'), containerUUID:$(this).data('container'), template: $(ui.sender).data('template'), order:that.tmpOrder, status:'new'});
+							}
+							else if(ui.sender.hasClass('blocks')){
+								IB.PageControllerInstance.moveBlock({
+									from: {
+											uuid: $(ui.item).attr('id'), // Update this and othe direct element ID references to UUID
+											parentUUID:$(ui.sender).data('uuid'), 
+											rowUUID:$(ui.sender).data('row'), 
+											containerUUID:$(ui.sender).data('container')
+										},
+									to: {
+											uuid: $(ui.item).attr('id'),
+											parentUUID:$(this).data('uuid'), 
+											rowUUID:$(this).data('row'), 
+											containerUUID:$(this).data('container'), 
+											order:that.tmpOrder,
+										}
+									});
+							}
+							else {
+								console.log('block dropped from unknown parent');
+							}
 							
 						},
 						update: function( event, ui ) {
+							IB.setState('editing');
 							that.collection.updateOrder($(this).sortable('toArray'));
 						}
 					});
