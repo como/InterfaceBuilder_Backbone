@@ -51,7 +51,7 @@ body {
 	margin-bottom: 2px;
 }
 
-.row-handle {
+.rows-handle {
 	position: relative;
 	width: 100%;
 	cursor: move;
@@ -60,7 +60,7 @@ body {
 	margin-bottom: 2px;
 }
 
-.block-handle {
+.blocks-handle {
 	position: relative;
 	width: 100%;
 	cursor: move;

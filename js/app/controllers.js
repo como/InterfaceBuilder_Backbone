@@ -41,7 +41,7 @@ IB.PageController = function(page) {
 		
 	}
 	this.addColumn = function(options){
-						
+		console.log(options);
 		var rowColumns = this.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		})
@@ -98,6 +98,7 @@ IB.PageController = function(page) {
 	// }
 	
 	this.removeBlock = function(options){
+		console.log(options);
 		var columnBlocks = this.page.get('containers').find(function(container){
 			 return container.get('uuid') == options.containerUUID;
 		})

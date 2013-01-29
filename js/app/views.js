@@ -9,82 +9,6 @@ var IB = IB || {};
 IB.containerClass = 'container';
 IB.rowClass = 'row';
 
-// BaseViews
-IB.SortableCollectionView = Backbone.View.extend({
-	initialize: function(attrs){
-		this.subViews 					= [];		
-		this.collection					= attrs.collection;
-		this.subViewConstructor = attrs.subViewConstructor;
-		this.collectionSelector = attrs.collectionSelector;
-		this.template						= attrs.template;
-		this.collectionType			= attrs.collectionType;		
-		
-		_(this).bindAll('addView', 'removeView');
-		this.collection.each(this.addView);		
-    this.collection.bind('add', this.addView);
-    this.collection.bind('remove', this.removeView);
-	},
-	addView: function(subviewModel){
-		var rv = new this.subViewConstructor({
-			model:subviewModel, 
-			id:subviewModel.get('uuid'),
-			parentUUID: this.model.get('uuid')
-		});
-		
-		this.subViews.push(rv.render());
-		
-		if(subviewModel.get('status') == 'new')
-		{			
-			this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
-			this.render();
-			this.collection.sort();
-		}	
-	},
-	removeView: function(subviewModel){
-	    var viewToRemove = _(this.subViews).select(function(subView) { return subView.model === subviewModel; })[0];
-	    this.subViews = _(this.subViews).without(viewToRemove);
-			$(viewToRemove.el).remove();		
-	},
-	render: function(){		
-		var that = this;
-		this.compile();
-    _(this.subViews).each(function(rv) {	
-     that.$(that.collectionSelector).append(rv.el);
-    });		
-    return this;	
-	},
-	compile: function(){
-		if(this.compiled) return;
-		that = this;
-		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid')}));
-		this.$(this.collectionSelector).droppable({
-			scope: that.collectionType,
-			activeClass: "ui-state-hover",
-			hoverClass: "ui-state-active",
-			drop: function( event, ui ) {				
-				ui.draggable.remove();				
-			}
-		}).sortable({
-			// handle: that.collectionSelector+"-handle",
-			handle: ".row-handle",
-			connectWith: that.collectionSelector,
-			beforeStop: function( event, ui ) {
-				that.tmpOrder = ui.placeholder.index();
-			},
-			receive: function( event, ui ) {		
-				IB.setState('editing');
-				that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), order:that.tmpOrder, status:'new'})
-				// that.model.get('rows').add({containerUUID:$(this).data('uuid'), order:that.tmpOrder});
-			},
-			update: function( event, ui ) {
-				IB.setState('editing');
-				that.collection.updateOrder($(this).sortable('toArray'));
-			}
-		});
-		this.compiled = true;
-	}
-});
-
 var PageView = Backbone.View.extend({
 	initialize: function(attrs){
 		_(this).bindAll('addContainer','removeContainer');
@@ -102,9 +26,13 @@ var PageView = Backbone.View.extend({
 			collectionType: 'rows',
 			collectionSelector: '.rows',
 			subViewConstructor: RowView,
+			subViewOptions: {parentUUID: container.get('uuid')},
 			tagName: 'div',
 			className: 'ib-container ' + IB.containerClass,
-			template: '#container-template'
+			template: '#container-template',
+			droppable: true,
+			resizable: false,
+			resizeableContainment: false			
 		});
 		this._containerViews.push(cv);
 		
@@ -135,6 +63,9 @@ var RowView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'ib-row ' + IB.rowClass,
 	initialize: function(attrs){
+		
+		this.subViewOptions = attrs.subViewOptions;
+		
 		this._columnViews = [];
 		_(this).bindAll('update','addColumn', 'removeColumn');
 		this.model.bind('change', this.update);
@@ -148,14 +79,16 @@ var RowView = Backbone.View.extend({
 			model:column, 
 			id: column.get('uuid'),
 			collection: column.get('blocks'),
-			rowUUID: this.model.get('uuid'), 
-			containerUUID: this.options.parentUUID, 
 			className:'ib-column column-outline span'+column.get('colspan'),
 			collectionType: 'blocks',
 			collectionSelector: '.blocks',
 			subViewConstructor: BlockView,
+			subViewOptions: {parentUUID: column.get('uuid'), rowUUID: this.model.get('uuid'), containerUUID: this.subViewOptions.parentUUID},			
 			tagName: 'div',
-			template: '#column-template'
+			template: '#column-template',
+			droppable: true,
+			resizeable: true,
+			resizeableContainment: this.model.get('uuid')
 		});
 		this._columnViews.push(cmv);		
     if (this._rendered) {
@@ -202,87 +135,8 @@ var ColumnView = IB.SortableCollectionView.extend({
 	events: {
 		'dblclick .handle': 'addOne',
 	},
-	addView: function(subviewModel){
-		var bv = new this.subViewConstructor({
-			model:subviewModel, 
-			id: subviewModel.get('uuid'), 
-			parentUUID: this.model.get('uuid'), 
-			rowUUID: this.options.rowUUID, 
-			containerUUID: this.options.containerUUID
-		});	
-		this.subViews.push(bv.render());		
-			
-		if(subviewModel.get('status') == 'new')
-		{			
-			this.subViews = _.sortBy(this.subViews, function(subView){ return subView.model.get('order'); });
-			this.render();
-			this.collection.sort();
-		}	
-	},
 	addOne: function(){
-		IB.PageControllerInstance.addColumn({containerUUID:this.options.containerUUID, rowUUID:this.options.rowUUID});
-	},
-	compile: function(){
-		if(this.compiled) return;
-		this.$el.html(_.template($(this.template).html(), {uuid: this.model.get('uuid'), options:this.options}));
-		var that = this;		
-		this.$el.resizable({
-				containment: '#'+that.options.rowUUID,
-				minWidth: IB.cssSandboxInstance.getColspanDiff(),
-	      grid: IB.cssSandboxInstance.getColspanDiff(),
-				resize: function( event, ui ) {			
-					that.model.set('colspan', IB.cssSandboxInstance.findColumnClassByWidth(ui.size.width).replace('span',''));
-				}
-	    });
-			
-			this.$('.blocks').droppable({
-					scope: "blocks",
-					activeClass: "ui-state-hover",
-					hoverClass: "ui-state-active",
-					drop: function( event, ui ) {
-						ui.draggable.remove();
-					}
-				}).sortable({
-						handle: ".block-handle",
-						connectWith: ".blocks",
-						beforeStop: function( event, ui ) {
-							that.tmpOrder = ui.placeholder.index();
-						},
-						receive: function( event, ui ) {
-							IB.setState('editing');
-							if(ui.sender.hasClass('sidebar_block'))
-							{
-								that.collection.makePlace(that.tmpOrder).add({parentUUID:$(this).data('uuid'), rowUUID:$(this).data('row'), containerUUID:$(this).data('container'), template: $(ui.sender).data('template'), order:that.tmpOrder, status:'new'});
-							}
-							else if(ui.sender.hasClass('blocks')){
-								IB.PageControllerInstance.moveBlock({
-									from: {
-											uuid: $(ui.item).attr('id'), // Update this and othe direct element ID references to UUID
-											parentUUID:$(ui.sender).data('uuid'), 
-											rowUUID:$(ui.sender).data('row'), 
-											containerUUID:$(ui.sender).data('container')
-										},
-									to: {
-											uuid: $(ui.item).attr('id'),
-											parentUUID:$(this).data('uuid'), 
-											rowUUID:$(this).data('row'), 
-											containerUUID:$(this).data('container'), 
-											order:that.tmpOrder,
-										}
-									});
-							}
-							else {
-								console.log('block dropped from unknown parent');
-							}
-							
-						},
-						update: function( event, ui ) {
-							IB.setState('editing');
-							that.collection.updateOrder($(this).sortable('toArray'));
-						}
-					});
-		
-		this.compiled = true;
+		IB.PageControllerInstance.addColumn({containerUUID:this.subViewOptions.containerUUID, rowUUID:this.subViewOptions.rowUUID});
 	}
 });
 
@@ -292,7 +146,8 @@ var ColumnView = IB.SortableCollectionView.extend({
 var BlockView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'ib-block',
-	initialize: function(){
+	initialize: function(attrs){
+		this.subViewOptions = attrs.subViewOptions;
 		_(this).bindAll('update');
 		this.model.bind('change', this.update);
 		this.template = '#'+this.model.get('template');
@@ -331,9 +186,7 @@ var BlockView = Backbone.View.extend({
 	render: function(){
 		this.$el.html(_.template($(this.template).html(), {
 			uuid: this.model.get('uuid'), 
-			columnUUID: this.options.parentUUID, 
-			rowUUID: this.options.rowUUID,
-			containerUUID: this.options.containerUUID,
+			subViewOptions: this.subViewOptions,
 			content: this.model.get('content')
 		}));		
 		return this;
