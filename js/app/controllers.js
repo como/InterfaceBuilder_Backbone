@@ -1,12 +1,3 @@
-/**
-To do:
-// 1. Blocks
-// 2. UI
-3. Routing
-4. Offsets
-5. Full persistence
-*/
-
 var IB = IB || {};
 
 IB.PageController = function(page) {
